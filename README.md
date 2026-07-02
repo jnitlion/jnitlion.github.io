@@ -1,6 +1,6 @@
 # Jes Itliong — Personal Academic Website
 
-A single-page, static personal website for Jester (Jes) N. Itliong — Physics PhD
+A single-page, static personal website for Jester (Jes) N. Itliong, Physics PhD
 candidate at Michigan Technological University. Plain HTML/CSS with a small
 amount of vanilla JavaScript. No frameworks, no build step.
 
