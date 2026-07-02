@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Coarse-Grained Stockmayer Model for EAN — Jes Itliong</title>
+  <meta name="description" content="Validating a coarse-grained Stockmayer fluid model against the viscosity and glass-transition behavior of ethylammonium nitrate (EAN).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article class="article">
+      <div class="container article-container">
+
+        <p class="article-breadcrumb"><a href="../index.html#research">← Back to Research</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Model validation</p>
+          <h1>A Coarse-Grained Stockmayer Model for Ethylammonium Nitrate</h1>
+          <p class="article-meta">
+            Published in <a href="https://doi.org/10.1063/5.0268727" rel="noopener"><em>The Journal of Chemical Physics</em> 163, 044503 (2025)</a>
+            · with A.L. Frischknecht, M.J. Stevens, and I. Nakamura
+          </p>
+        </header>
+
+        <!-- ==============================================================
+             Starter summary — rewrite this prose in your own voice.
+             Each .figure-slot below is a placeholder: replace the inner
+             .figure-placeholder div with <img src="..." alt="..."> when
+             you have the figure ready, and update the caption.
+             ============================================================== -->
+
+        <h2>The idea</h2>
+        <p>
+          Ionic liquids are salts that are molten at room temperature — attractive as safer
+          electrolytes and green solvents, but often too viscous to be practical. Atomistic
+          simulations can predict their viscosity, but they are expensive and tied to one
+          specific chemistry at a time. The question behind this project: how much chemical
+          detail do you actually need to capture the viscosity of a real ionic liquid?
+        </p>
+        <p>
+          We tested the most minimal candidate — the Stockmayer fluid, spheres carrying a
+          point charge and a point dipole — against ethylammonium nitrate (EAN), one of the
+          oldest and best-characterized protic ionic liquids.
+        </p>
+
+        <figure class="figure-slot">
+          <div class="figure-placeholder" role="img" aria-label="Placeholder for a schematic of the coarse-grained Stockmayer model of EAN">
+            <span>Figure slot — e.g., schematic of the coarse-grained EAN model (spheres with charge and dipole)</span>
+          </div>
+          <figcaption>Coarse-grained representation of EAN as a Stockmayer fluid. <em>(Replace with your figure and caption.)</em></figcaption>
+        </figure>
+
+        <h2>What we did</h2>
+        <p>
+          We parameterized the model against EAN's molecular properties — cation diameter
+          σ⁺ = 4.80 Å, reduced charge q = +0.35e, and dipole moment μ = 5.17 D — and ran
+          equilibrium molecular dynamics in LAMMPS, computing viscosity with Green–Kubo
+          stress-autocorrelation methods across a wide temperature range.
+        </p>
+
+        <figure class="figure-slot">
+          <div class="figure-placeholder" role="img" aria-label="Placeholder for a plot of simulated versus experimental viscosity of EAN as a function of temperature">
+            <span>Figure slot — e.g., viscosity vs. temperature: simulation vs. experiment</span>
+          </div>
+          <figcaption>Simulated viscosity of the Stockmayer EAN model compared with experimental data. <em>(Replace with your figure and caption.)</em></figcaption>
+        </figure>
+
+        <h2>What we found</h2>
+        <p>
+          The minimal dipolar model reproduces EAN's experimental viscosity and its
+          glass-transition behavior. That's a meaningful result: it says the transport
+          physics of a real protic ionic liquid is controlled by a small set of molecular
+          parameters — size, charge, and dipole moment — rather than by chemical detail.
+          It also validates the Stockmayer framework as a fast, transferable platform for
+          scanning ionic-liquid design space, which is exactly what the
+          <a href="parameter-space.html">parameter-space study</a> does next.
+        </p>
+
+        <figure class="figure-slot">
+          <div class="figure-placeholder" role="img" aria-label="Placeholder for an additional figure, for example glass-transition analysis">
+            <span>Figure slot — e.g., glass-transition analysis or structure snapshot</span>
+          </div>
+          <figcaption><em>(Optional third figure — delete this block if you don't need it.)</em></figcaption>
+        </figure>
+
+        <nav class="article-nav" aria-label="More research">
+          <a href="parameter-space.html">Next: Viscosity across ionic-liquid parameter space →</a>
+        </nav>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

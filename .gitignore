@@ -1,0 +1,10 @@
+# Local working files — NOT part of the published website.
+# Root-level PDFs/DOCX (papers, alternate CVs, resume) stay private;
+# only assets/ files (the public CV download) are published.
+*.pdf
+*.docx
+!assets/*.pdf
+
+# Claude Code local tooling and working notes
+.claude/
+ilthermo-exploration.md

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Stockmayer Fluid Simulator — Jes Itliong</title>
+  <meta name="description" content="An interactive 3D molecular dynamics simulation of the Stockmayer fluid (Lennard-Jones spheres with point dipoles), running live in the browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* page-specific layout for the simulator */
+    .sim-wrap {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 19rem;
+      gap: 1.5rem;
+      align-items: start;
+      margin-top: 1.5rem;
+    }
+    #sim-canvas-holder {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      min-height: 30rem;
+    }
+    #sim-canvas-holder canvas { display: block; }
+    #sim-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+    .sim-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .sim-panel h2 {
+      font-size: 1.05rem;
+      margin: 0 0 1rem;
+    }
+    .sim-control { margin-bottom: 0.9rem; }
+    .sim-control label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .sim-control output {
+      font-weight: 400;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .sim-control input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+    .sim-control select {
+      width: 100%;
+      padding: 0.3rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: inherit;
+    }
+    .sim-check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.9rem;
+    }
+    .sim-check input { accent-color: var(--accent); }
+    .sim-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .sim-buttons button {
+      flex: 1;
+      padding: 0.5rem 0;
+      border: 1.5px solid var(--ink-soft);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--ink);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .sim-buttons button:hover { background: var(--ink); color: #fff; }
+    .sim-buttons button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .sim-buttons button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .sim-readout {
+      margin-top: 1.1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem 1rem;
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .sim-readout dt { color: var(--text-muted); }
+    .sim-readout dd { margin: 0; font-weight: 600; color: var(--ink); text-align: right; }
+    .sim-about {
+      max-width: 46rem;
+      margin: 2.5rem auto 0;
+    }
+    .sim-about h2 { font-size: 1.4rem; margin: 2rem 0 0.75rem; }
+    @media (max-width: 900px) {
+      .sim-grid { grid-template-columns: 1fr; }
+      #sim-canvas-holder { min-height: 22rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="article">
+      <div class="sim-wrap">
+
+        <p class="article-breadcrumb"><a href="../index.html#projects">← Back to Projects</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Interactive demo</p>
+          <h1>3D Stockmayer Fluid Simulator</h1>
+          <p class="article-meta">
+            A live molecular dynamics simulation of Lennard-Jones spheres carrying point dipoles —
+            the coarse-grained model behind my dissertation. Drag to rotate, scroll to zoom.
+          </p>
+        </header>
+
+        <div class="sim-grid">
+          <div id="sim-canvas-holder">
+            <div id="sim-fallback"><p>Loading simulation…<br><small>(requires WebGL and an internet connection for the Three.js library)</small></p></div>
+          </div>
+
+          <aside class="sim-panel" aria-label="Simulation controls">
+            <h2>Controls</h2>
+
+            <div class="sim-control">
+              <label for="ctl-N">Particles <output id="out-N">125</output></label>
+              <select id="ctl-N">
+                <option value="64">64</option>
+                <option value="125" selected>125</option>
+                <option value="216">216</option>
+              </select>
+            </div>
+
+            <div class="sim-control">
+              <label for="ctl-sigma">Bead size σ <output id="out-sigma">1.00</output></label>
+              <input type="range" id="ctl-sigma" min="0.7" max="1.3" step="0.01" value="1.0">
+            </div>
+
+            <div class="sim-control">
+              <label for="ctl-eps">LJ well depth ε <output id="out-eps">1.00</output></label>
+              <input type="range" id="ctl-eps" min="0.2" max="2.0" step="0.05" value="1.0">
+            </div>
+
+            <div class="sim-control">
+              <label for="ctl-mu">Dipole moment μ <output id="out-mu">1.00</output></label>
+              <input type="range" id="ctl-mu" min="0" max="2.5" step="0.05" value="1.0">
+            </div>
+
+            <div class="sim-control">
+              <label for="ctl-T">Temperature T <output id="out-T">1.00</output></label>
+              <input type="range" id="ctl-T" min="0.1" max="3.0" step="0.05" value="1.0">
+            </div>
+
+            <label class="sim-check" for="ctl-npt">
+              <input type="checkbox" id="ctl-npt">
+              Constant pressure (NPT)
+            </label>
+
+            <div class="sim-control">
+              <label for="ctl-P">Target pressure P <output id="out-P">0.50</output></label>
+              <input type="range" id="ctl-P" min="0.05" max="5" step="0.05" value="0.5" disabled>
+            </div>
+
+            <div class="sim-control">
+              <label for="ctl-speed">Speed (steps/frame) <output id="out-speed">3</output></label>
+              <input type="range" id="ctl-speed" min="1" max="8" step="1" value="3">
+            </div>
+
+            <div class="sim-buttons">
+              <button id="btn-pause" class="primary" type="button">Pause</button>
+              <button id="btn-reset" type="button">Reset</button>
+            </div>
+
+            <dl class="sim-readout">
+              <dt>Measured T</dt><dd id="ro-T">–</dd>
+              <dt>Measured P</dt><dd id="ro-P">–</dd>
+              <dt>Density ρ</dt><dd id="ro-rho">–</dd>
+              <dt>Box length L</dt><dd id="ro-L">–</dd>
+            </dl>
+          </aside>
+        </div>
+
+        <div class="sim-about">
+          <h2>What you're looking at</h2>
+          <p>
+            Each sphere is a coarse-grained ion: a Lennard-Jones bead (size σ, attraction
+            strength ε) carrying a point dipole (moment μ, drawn as an arrow). This
+            <strong>Stockmayer fluid</strong> is the minimal model my research uses to ask
+            which molecular properties control the viscosity of ionic liquids — the same
+            framework that <a href="../research/stockmayer-ean.html">quantitatively reproduces
+            the viscosity of ethylammonium nitrate</a>. All quantities are in reduced
+            (dimensionless) units, the standard convention in molecular simulation.
+          </p>
+
+          <h2>Things to try</h2>
+          <ul>
+            <li><strong>Crank μ up to 2+</strong> — dipoles attract head-to-tail, and you'll see particles line up into chains and rings. This self-association is a key reason polar liquids are viscous.</li>
+            <li><strong>Drop the temperature below ~0.3</strong> — motion becomes sluggish and structure freezes in, a glimpse of glassy dynamics.</li>
+            <li><strong>Turn on NPT and raise the pressure</strong> — the box compresses until the fluid pushes back. Lower it and the system expands toward a gas.</li>
+            <li><strong>Set μ = 0</strong> — you recover a plain Lennard-Jones fluid; compare how much livelier it is at the same temperature.</li>
+          </ul>
+
+          <h2>What this demo simplifies</h2>
+          <p>
+            This is a teaching demonstration, not a research instrument. To run in real time it
+            uses a small system (periodic boundaries), truncated dipole–dipole interactions
+            instead of Ewald summation, Berendsen-style thermostat and barostat, and gentle
+            force caps for numerical stability. My research simulations use LAMMPS with
+            long-range electrostatics, rigorous ensembles, and thousands of particles — but the
+            qualitative physics you see here (dipolar chaining, glassy slowdown,
+            pressure–density coupling) is the real thing.
+          </p>
+          <p>
+            Built with plain JavaScript and <a href="https://threejs.org" rel="noopener">Three.js</a>;
+            the physics engine is ~200 lines of velocity-Verlet MD you can read in this page's source.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+    /* ================= Stockmayer fluid MD engine =================
+       Reduced units: m = 1, k_B = 1. Velocity Verlet for translation,
+       explicit rotation of unit dipole vectors driven by pair torques.
+       Berendsen thermostat (translational + rotational) and optional
+       Berendsen barostat. O(N^2) pair loop with cutoff — fine for the
+       small N used here. */
+
+    const P = {                 // live parameters (bound to sliders)
+      N: 125, sigma: 1.0, eps: 1.0, mu: 1.0,
+      T: 1.0, targetP: 0.5, npt: false,
+      stepsPerFrame: 3, paused: false,
+    };
+
+    const DT = 0.0035;          // time step
+    const INERTIA = 0.5;        // moment of inertia of each dipole
+    const TAU_T = 0.15;         // thermostat time constant
+    const TAU_P = 2.0;          // barostat time constant (with compressibility folded in)
+    const FMAX = 800;           // per-pair force cap (stability when sliders jump)
+    const VMAX = 40;            // velocity/angular-velocity cap
+    const RHO0 = 0.35;          // initial number density
+
+    let N, L;
+    let pos, vel, frc;          // positions, velocities, forces (3N)
+    let dir, omg, trq;          // dipole directions, angular velocities, torques (3N)
+    let measT = 0, measP = 0;
+
+    function gauss() {          // Box–Muller
+      let u = 0, v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    }
+
+    function init() {
+      N = P.N;
+      L = Math.cbrt(N / RHO0);
+      pos = new Float64Array(3 * N); vel = new Float64Array(3 * N); frc = new Float64Array(3 * N);
+      dir = new Float64Array(3 * N); omg = new Float64Array(3 * N); trq = new Float64Array(3 * N);
+
+      // simple cubic lattice with jitter
+      const n = Math.ceil(Math.cbrt(N)), a = L / n;
+      let k = 0;
+      outer:
+      for (let ix = 0; ix < n; ix++) for (let iy = 0; iy < n; iy++) for (let iz = 0; iz < n; iz++) {
+        if (k >= N) break outer;
+        pos[3*k]   = (ix + 0.5) * a + 0.05 * (Math.random() - 0.5);
+        pos[3*k+1] = (iy + 0.5) * a + 0.05 * (Math.random() - 0.5);
+        pos[3*k+2] = (iz + 0.5) * a + 0.05 * (Math.random() - 0.5);
+        k++;
+      }
+
+      for (let i = 0; i < N; i++) {
+        // Maxwell-ish velocities at target T
+        const s = Math.sqrt(P.T);
+        vel[3*i] = s * gauss(); vel[3*i+1] = s * gauss(); vel[3*i+2] = s * gauss();
+        // random unit dipole direction
+        let x = gauss(), y = gauss(), z = gauss();
+        const r = Math.hypot(x, y, z) || 1;
+        dir[3*i] = x / r; dir[3*i+1] = y / r; dir[3*i+2] = z / r;
+        // angular velocity perpendicular to the dipole axis
+        const sw = Math.sqrt(P.T / INERTIA);
+        let wx = sw * gauss(), wy = sw * gauss(), wz = sw * gauss();
+        const d = wx * dir[3*i] + wy * dir[3*i+1] + wz * dir[3*i+2];
+        omg[3*i] = wx - d * dir[3*i]; omg[3*i+1] = wy - d * dir[3*i+1]; omg[3*i+2] = wz - d * dir[3*i+2];
+      }
+      // remove center-of-mass drift
+      let cx = 0, cy = 0, cz = 0;
+      for (let i = 0; i < N; i++) { cx += vel[3*i]; cy += vel[3*i+1]; cz += vel[3*i+2]; }
+      for (let i = 0; i < N; i++) { vel[3*i] -= cx / N; vel[3*i+1] -= cy / N; vel[3*i+2] -= cz / N; }
+      computeForces();
+    }
+
+    function computeForces() {
+      frc.fill(0); trq.fill(0);
+      let virial = 0;
+      const sig = P.sigma, eps = P.eps, mu = P.mu, mu2 = mu * mu;
+      const rc = 2.5 * sig, rc2 = rc * rc, sig2 = sig * sig;
+      const hasDip = mu2 > 1e-6;
+
+      for (let i = 0; i < N; i++) {
+        const xi = pos[3*i], yi = pos[3*i+1], zi = pos[3*i+2];
+        const uix = dir[3*i], uiy = dir[3*i+1], uiz = dir[3*i+2];
+        for (let j = i + 1; j < N; j++) {
+          // minimum-image separation r_ij = r_i - r_j
+          let dx = xi - pos[3*j], dy = yi - pos[3*j+1], dz = zi - pos[3*j+2];
+          dx -= L * Math.round(dx / L); dy -= L * Math.round(dy / L); dz -= L * Math.round(dz / L);
+          const r2 = dx * dx + dy * dy + dz * dz;
+          if (r2 >= rc2 || r2 < 1e-12) continue;
+
+          // Lennard-Jones
+          const s2 = sig2 / r2, s6 = s2 * s2 * s2, s12 = s6 * s6;
+          let flj = 24 * eps * (2 * s12 - s6) / r2;   // F = flj * r_vec
+          let fx = flj * dx, fy = flj * dy, fz = flj * dz;
+
+          if (hasDip) {
+            const r = Math.sqrt(r2), inv_r = 1 / r;
+            const nx = dx * inv_r, ny = dy * inv_r, nz = dz * inv_r;
+            const inv_r3 = inv_r / r2, inv_r4 = inv_r3 * inv_r;
+            const ujx = dir[3*j], ujy = dir[3*j+1], ujz = dir[3*j+2];
+            const cij = uix * ujx + uiy * ujy + uiz * ujz;
+            const ci = uix * nx + uiy * ny + uiz * nz;
+            const cj = ujx * nx + ujy * ny + ujz * nz;
+            // force on i (n points from j to i)
+            const pref = 3 * mu2 * inv_r4;
+            const cn = cij - 5 * ci * cj;
+            fx += pref * (cn * nx + ci * ujx + cj * uix);
+            fy += pref * (cn * ny + ci * ujy + cj * uiy);
+            fz += pref * (cn * nz + ci * ujz + cj * uiz);
+            // torques: tau_i = p_i x E_i(from j), tau_j = p_j x E_j(from i)
+            const tp = mu2 * inv_r3;
+            let eix = 3 * cj * nx - ujx, eiy = 3 * cj * ny - ujy, eiz = 3 * cj * nz - ujz;
+            trq[3*i]   += tp * (uiy * eiz - uiz * eiy);
+            trq[3*i+1] += tp * (uiz * eix - uix * eiz);
+            trq[3*i+2] += tp * (uix * eiy - uiy * eix);
+            let ejx = 3 * ci * nx - uix, ejy = 3 * ci * ny - uiy, ejz = 3 * ci * nz - uiz;
+            trq[3*j]   += tp * (ujy * ejz - ujz * ejy);
+            trq[3*j+1] += tp * (ujz * ejx - ujx * ejz);
+            trq[3*j+2] += tp * (ujx * ejy - ujy * ejx);
+          }
+
+          // cap runaway pair forces (slider jumps can create overlaps)
+          const fmag2 = fx * fx + fy * fy + fz * fz;
+          if (fmag2 > FMAX * FMAX) {
+            const sc = FMAX / Math.sqrt(fmag2);
+            fx *= sc; fy *= sc; fz *= sc;
+          }
+
+          frc[3*i] += fx; frc[3*i+1] += fy; frc[3*i+2] += fz;
+          frc[3*j] -= fx; frc[3*j+1] -= fy; frc[3*j+2] -= fz;
+          virial += dx * fx + dy * fy + dz * fz;
+        }
+      }
+      return virial;
+    }
+
+    function rotate(i, dt) {
+      // rotate dir[i] around omg[i] by |omega| dt (Rodrigues)
+      const wx = omg[3*i], wy = omg[3*i+1], wz = omg[3*i+2];
+      const w = Math.hypot(wx, wy, wz);
+      if (w < 1e-10) return;
+      const ax = wx / w, ay = wy / w, az = wz / w;
+      const th = w * dt, c = Math.cos(th), s = Math.sin(th);
+      const ux = dir[3*i], uy = dir[3*i+1], uz = dir[3*i+2];
+      const d = ax * ux + ay * uy + az * uz;
+      const nx = ux * c + (ay * uz - az * uy) * s + ax * d * (1 - c);
+      const ny = uy * c + (az * ux - ax * uz) * s + ay * d * (1 - c);
+      const nz = uz * c + (ax * uy - ay * ux) * s + az * d * (1 - c);
+      const r = Math.hypot(nx, ny, nz) || 1;
+      dir[3*i] = nx / r; dir[3*i+1] = ny / r; dir[3*i+2] = nz / r;
+    }
+
+    function step() {
+      const half = 0.5 * DT;
+      // first half-kick + drift
+      for (let i = 0; i < 3 * N; i++) vel[i] += half * frc[i];
+      for (let i = 0; i < 3 * N; i++) {
+        pos[i] += DT * vel[i];
+        pos[i] -= L * Math.floor(pos[i] / L);       // wrap into [0, L)
+      }
+      for (let i = 0; i < 3 * N; i++) omg[i] += (half / INERTIA) * trq[i];
+      for (let i = 0; i < N; i++) rotate(i, DT);
+
+      const virial = computeForces();
+
+      // second half-kick
+      for (let i = 0; i < 3 * N; i++) vel[i] += half * frc[i];
+      for (let i = 0; i < 3 * N; i++) omg[i] += (half / INERTIA) * trq[i];
+
+      // keep angular velocity perpendicular to the dipole axis, cap speeds
+      for (let i = 0; i < N; i++) {
+        const d = omg[3*i] * dir[3*i] + omg[3*i+1] * dir[3*i+1] + omg[3*i+2] * dir[3*i+2];
+        omg[3*i] -= d * dir[3*i]; omg[3*i+1] -= d * dir[3*i+1]; omg[3*i+2] -= d * dir[3*i+2];
+      }
+      for (let i = 0; i < 3 * N; i++) {
+        if (vel[i] > VMAX) vel[i] = VMAX; else if (vel[i] < -VMAX) vel[i] = -VMAX;
+        if (omg[i] > VMAX) omg[i] = VMAX; else if (omg[i] < -VMAX) omg[i] = -VMAX;
+      }
+
+      // measured temperature (translational + rotational)
+      let ke = 0, kr = 0;
+      for (let i = 0; i < 3 * N; i++) ke += vel[i] * vel[i];
+      for (let i = 0; i < 3 * N; i++) kr += omg[i] * omg[i];
+      const Ttr = ke / (3 * N);
+      const Trot = INERTIA * kr / (2 * N);
+      measT = (3 * Ttr + 2 * Trot) / 5;
+
+      // Berendsen thermostats
+      const lamT = Math.min(1.08, Math.max(0.92, Math.sqrt(1 + (DT / TAU_T) * (P.T / Math.max(Ttr, 1e-6) - 1))));
+      const lamR = Math.min(1.08, Math.max(0.92, Math.sqrt(1 + (DT / TAU_T) * (P.T / Math.max(Trot, 1e-6) - 1))));
+      for (let i = 0; i < 3 * N; i++) { vel[i] *= lamT; omg[i] *= lamR; }
+
+      // pressure + optional Berendsen barostat
+      const V = L * L * L;
+      measP = (N * Ttr + virial / 3) / V;
+      if (P.npt) {
+        let m3 = 1 + (DT / TAU_P) * (measP - P.targetP);
+        m3 = Math.min(1.003, Math.max(0.997, m3));
+        const m = Math.cbrt(m3);
+        const Lnew = L * m;
+        if (Lnew > 3.2 * P.sigma && Lnew < 60) {    // keep the box sane
+          L = Lnew;
+          for (let i = 0; i < 3 * N; i++) pos[i] *= m;
+        }
+      }
+
+      // safety net: reset if numbers blow up
+      if (!isFinite(measT) || !isFinite(pos[0])) init();
+    }
+
+    /* ================= Three.js rendering ================= */
+
+    const holder = document.getElementById("sim-canvas-holder");
+    const fallback = document.getElementById("sim-fallback");
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xfaf6ef);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 500);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    holder.appendChild(renderer.domElement);
+    fallback.style.display = "none";
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 1.1));
+    const dl = new THREE.DirectionalLight(0xffffff, 1.2);
+    dl.position.set(1, 2, 1.5);
+    scene.add(dl);
+
+    const MAXN = 216;
+    const sphereGeo = new THREE.SphereGeometry(0.5, 20, 14);
+    const sphereMat = new THREE.MeshStandardMaterial({ color: 0x1e5c58, roughness: 0.55, metalness: 0.05 });
+    const spheres = new THREE.InstancedMesh(sphereGeo, sphereMat, MAXN);
+    scene.add(spheres);
+
+    // arrow = shaft + head, both instanced, aligned to local +Y from the bead center
+    const shaftGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.55, 8);
+    shaftGeo.translate(0, 0.275, 0);
+    const headGeo = new THREE.ConeGeometry(0.14, 0.25, 10);
+    headGeo.translate(0, 0.675, 0);
+    const arrowMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.4 });
+    const shafts = new THREE.InstancedMesh(shaftGeo, arrowMat, MAXN);
+    const heads = new THREE.InstancedMesh(headGeo, arrowMat, MAXN);
+    scene.add(shafts); scene.add(heads);
+
+    const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+    const boxLines = new THREE.LineSegments(
+      new THREE.EdgesGeometry(boxGeo),
+      new THREE.LineBasicMaterial({ color: 0x123c3a })
+    );
+    scene.add(boxLines);
+
+    const M = new THREE.Matrix4();
+    const Q = new THREE.Quaternion();
+    const Y = new THREE.Vector3(0, 1, 0);
+    const U = new THREE.Vector3();
+    const T3 = new THREE.Vector3();
+    const S = new THREE.Vector3();
+
+    function draw() {
+      const h = L / 2;
+      const showArrows = P.mu > 1e-3;
+      const arrowScale = P.sigma * (0.65 + 0.35 * Math.min(P.mu / 2.5, 1));
+      for (let i = 0; i < N; i++) {
+        T3.set(pos[3*i] - h, pos[3*i+1] - h, pos[3*i+2] - h);
+        S.setScalar(P.sigma);
+        M.compose(T3, Q.identity(), S);
+        spheres.setMatrixAt(i, M);
+        U.set(dir[3*i], dir[3*i+1], dir[3*i+2]);
+        Q.setFromUnitVectors(Y, U);
+        S.setScalar(showArrows ? arrowScale : 0.0001);
+        M.compose(T3, Q, S);
+        shafts.setMatrixAt(i, M);
+        heads.setMatrixAt(i, M);
+      }
+      spheres.count = N; shafts.count = N; heads.count = N;
+      spheres.instanceMatrix.needsUpdate = true;
+      shafts.instanceMatrix.needsUpdate = true;
+      heads.instanceMatrix.needsUpdate = true;
+      boxLines.scale.setScalar(L);
+    }
+
+    function fitCamera() {
+      camera.position.set(1.6 * L, 1.2 * L, 1.9 * L);
+      controls.target.set(0, 0, 0);
+      controls.update();
+    }
+
+    function resize() {
+      const w = holder.clientWidth;
+      const hgt = Math.max(holder.clientHeight, 420);
+      renderer.setSize(w, hgt);
+      camera.aspect = w / hgt;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener("resize", resize);
+
+    /* ================= UI wiring ================= */
+
+    const $ = (id) => document.getElementById(id);
+    function bindRange(id, outId, key, fmt = (v) => v.toFixed(2)) {
+      const el = $(id), out = $(outId);
+      el.addEventListener("input", () => {
+        P[key] = parseFloat(el.value);
+        out.textContent = fmt(P[key]);
+      });
+    }
+    bindRange("ctl-sigma", "out-sigma", "sigma");
+    bindRange("ctl-eps", "out-eps", "eps");
+    bindRange("ctl-mu", "out-mu", "mu");
+    bindRange("ctl-T", "out-T", "T");
+    bindRange("ctl-P", "out-P", "targetP");
+    bindRange("ctl-speed", "out-speed", "stepsPerFrame", (v) => v.toFixed(0));
+
+    $("ctl-N").addEventListener("change", () => {
+      P.N = parseInt($("ctl-N").value, 10);
+      $("out-N").textContent = P.N;
+      init(); fitCamera();
+    });
+    $("ctl-npt").addEventListener("change", () => {
+      P.npt = $("ctl-npt").checked;
+      $("ctl-P").disabled = !P.npt;
+    });
+    $("btn-pause").addEventListener("click", () => {
+      P.paused = !P.paused;
+      $("btn-pause").textContent = P.paused ? "Resume" : "Pause";
+    });
+    $("btn-reset").addEventListener("click", () => { init(); fitCamera(); });
+
+    /* ================= main loop ================= */
+
+    let frame = 0;
+    function loop() {
+      requestAnimationFrame(loop);
+      if (!P.paused) {
+        for (let s = 0; s < P.stepsPerFrame; s++) step();
+      }
+      draw();
+      controls.update();
+      renderer.render(scene, camera);
+      if (++frame % 12 === 0) {
+        $("ro-T").textContent = measT.toFixed(2);
+        $("ro-P").textContent = measP.toFixed(2);
+        $("ro-rho").textContent = (N / (L * L * L)).toFixed(3);
+        $("ro-L").textContent = L.toFixed(2);
+      }
+    }
+
+    init();
+    resize();
+    fitCamera();
+    loop();
+  </script>
+</body>
+</html>

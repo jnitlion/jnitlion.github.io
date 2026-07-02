@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jester N. Itliong — Computational Physicist</title>
+  <meta name="description" content="Jester (Jes) N. Itliong — Physics PhD candidate at Michigan Technological University studying the molecular origins of viscosity in ionic and polymerized ionic liquids using molecular dynamics simulation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#about">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#top" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#teaching">Teaching</a></li>
+        <li><a href="#cv">CV</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ ABOUT / HERO ============ -->
+    <section id="about" class="hero">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <p class="hero-kicker">Computational Soft Matter · Polymer Physics</p>
+          <h1>Jester (Jes) N. Itliong</h1>
+          <p class="hero-subtitle">Physics PhD Candidate, Michigan Technological University</p>
+          <p>
+            I study how molecular-scale properties — charge, dipole moment, ion size —
+            govern the macroscopic viscosity of ionic liquids and polymerized ionic liquids,
+            using coarse-grained molecular dynamics simulations
+            (<abbr title="Large-scale Atomic/Molecular Massively Parallel Simulator">LAMMPS</abbr>),
+            Python, and HPC/Slurm pipelines. I'm advised by
+            <a href="https://www.mtu.edu/physics/department/faculty/nakamura/" rel="noopener">Prof.&nbsp;Issei&nbsp;Nakamura</a>.
+          </p>
+          <p>
+            My dissertation, <em>“Molecular Origins of Viscosity in Ionic and Polymerized Ionic
+            Liquids: Insights from Stockmayer Fluid Simulations,”</em> is scheduled for defense on
+            <strong>July 27, 2026</strong>.
+          </p>
+          <div class="hero-tracks">
+            <h2 class="visually-hidden">Career interests</h2>
+            <p class="tracks-label">Currently on the job market for:</p>
+            <ul class="tracks-list">
+              <li>Postdoctoral research in computational soft matter &amp; polymer physics</li>
+              <li>Industry computational / data science roles (materials design, drug delivery) where MD &amp; HPC skills transfer</li>
+              <li>Teaching positions at small colleges</li>
+            </ul>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Get in touch</a>
+            <a class="btn btn-secondary" href="assets/Itliong_CV_May_2026.pdf" download>Download CV (PDF)</a>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <!-- Replace this placeholder with a real headshot, e.g.
+               <img src="assets/headshot.jpg" alt="Portrait of Jester N. Itliong"> -->
+          <div class="photo-placeholder" role="img" aria-label="Placeholder for a portrait photo of Jester N. Itliong">
+            <span>JI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESEARCH ============ -->
+    <section id="research" class="section">
+      <div class="container">
+        <h2 class="section-title">Research</h2>
+        <p class="section-intro">
+          My work connects molecular interactions to macroscopic transport in charged soft matter.
+          I run equilibrium and non-equilibrium molecular dynamics simulations and analyze them with
+          Green–Kubo, Einstein–Helfand, and correlation-function methods, in collaboration with
+          researchers at Sandia National Laboratories.
+        </p>
+        <div class="card-grid">
+          <a class="card card-link" href="research/stockmayer-ean.html">
+            <p class="card-tag">Model validation</p>
+            <h3>A coarse-grained Stockmayer model for ethylammonium nitrate</h3>
+            <p>
+              Parameterized a minimal dipolar model of the protic ionic liquid EAN
+              (σ⁺ = 4.80 Å, q = +0.35e, μ = 5.17 D) and showed that it reproduces EAN's
+              experimental viscosity and glass-transition behavior — evidence that a simple
+              coarse-grained fluid can capture the transport physics of a real ionic liquid.
+            </p>
+            <span class="card-more">Read more →</span>
+          </a>
+          <a class="card card-link" href="research/parameter-space.html">
+            <p class="card-tag">Design rules</p>
+            <h3>Viscosity across ionic-liquid parameter space</h3>
+            <p>
+              Systematically varied charge, dipole moment and mobility, ion size, and chain
+              length to map how each molecular property governs viscosity — isolating
+              molecular-level design rules for engineering low-viscosity ionic liquids.
+            </p>
+            <span class="card-more">Read more →</span>
+          </a>
+          <a class="card card-link" href="research/polymerized-ionic-liquids.html">
+            <p class="card-tag">Polymer dynamics</p>
+            <h3>Polymerized ionic liquids: scaling, chain dynamics, ion pairing</h3>
+            <p>
+              Examined how cation size and dipole mobility affect viscosity scaling,
+              ion-pair dynamics, and chain orientational relaxation in polymerized ionic
+              liquids (polyILs), linking monomer-scale chemistry to melt rheology.
+            </p>
+            <span class="card-more">Read more →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Projects</h2>
+        <p class="section-intro">
+          Software, data science, and simulation projects — including interactive demos
+          that run right in your browser.
+        </p>
+        <div class="card-grid">
+          <a class="card card-link" href="projects/stockmayer-simulator.html">
+            <p class="card-tag">Interactive demo</p>
+            <h3>3D Stockmayer Fluid Simulator</h3>
+            <p>
+              A live molecular dynamics simulation of the model behind my dissertation —
+              Lennard-Jones beads with point dipoles. Set bead size, dipole moment, well
+              depth, temperature, and pressure, and watch chains form, glasses freeze,
+              and the box breathe in real time.
+            </p>
+            <span class="card-more">Launch simulator →</span>
+          </a>
+          <a class="card card-link" href="https://il-property-explorer.streamlit.app" rel="noopener">
+            <p class="card-tag">Machine learning</p>
+            <h3>Ionic-Liquid Property Explorer</h3>
+            <p>
+              A machine-learning dashboard trained on 65,000+ measurements from the
+              NIST ILThermo database: pick or draw any cation–anion combination and
+              get predicted viscosity, ionic conductivity, and density curves plus a
+              derived glass-transition temperature — with honest uncertainty bands
+              and validation that holds out entire ion families.
+            </p>
+            <span class="card-more">Launch dashboard →</span>
+          </a>
+        </div>
+        <p class="projects-source">
+          Both projects are open source:
+          <a href="https://github.com/jnitlion/jnitlion.github.io" rel="noopener">this site &amp; simulator</a> ·
+          <a href="https://github.com/jnitlion/il-property-explorer" rel="noopener">property explorer</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ PUBLICATIONS ============ -->
+    <section id="publications" class="section">
+      <div class="container">
+        <h2 class="section-title">Publications</h2>
+
+        <h3 class="pub-group">Journal articles</h3>
+        <ol class="pub-list" reversed>
+          <li>
+            <span class="pub-authors"><strong>Itliong, J.N.</strong>, Frischknecht, A.L., Stevens, M.J., and Nakamura, I.</span> (2026).
+            <span class="pub-title">Viscosity, Chain Dynamics, and Ion-pairing in Polymerized Ionic Liquids: Effects of Cation Size and Dipole Mobility.</span>
+            <em>In preparation.</em>
+          </li>
+          <li>
+            <span class="pub-authors"><strong>Itliong, J.N.</strong>, Frischknecht, A.L., Stevens, M.J., and Nakamura, I.</span> (2025).
+            <span class="pub-title">Stockmayer Fluid Simulations for Viscosity and Glass Transition Temperature of Ionic Liquids.</span>
+            <em>The Journal of Chemical Physics</em>, 163(4), 044503.
+            <a href="https://doi.org/10.1063/5.0268727" rel="noopener">doi:10.1063/5.0268727</a>
+          </li>
+          <li>
+            <span class="pub-authors">Gao, T., <strong>Itliong, J.</strong>, Kumar, S.P., Hjorth, Z., and Nakamura, I.</span> (2021).
+            <span class="pub-title">Polarization of Ionic Liquid and Polymer and its Implications for Polymerized Ionic Liquids: An Overview Towards a New Theory and Simulation.</span>
+            <em>Journal of Polymer Science</em>, 59(21), 2434–2457.
+            <a href="https://doi.org/10.1002/pol.20210330" rel="noopener">doi:10.1002/pol.20210330</a>
+          </li>
+          <li>
+            <span class="pub-authors"><strong>Itliong, J.N.</strong>, Villagracia, A.R.C., Moreno, J.L.V., et al.</span> (2019).
+            <span class="pub-title">Investigation of reverse ionic diffusion in forward-osmosis-aided dewatering of microalgae: A molecular dynamics study.</span>
+            <em>Bioresource Technology</em>, 279, 181–188.
+            <a href="https://doi.org/10.1016/j.biortech.2019.01.109" rel="noopener">doi:10.1016/j.biortech.2019.01.109</a>
+          </li>
+        </ol>
+
+        <h3 class="pub-group">Conference proceedings</h3>
+        <ol class="pub-list" reversed>
+          <li>
+            <span class="pub-authors"><strong>Itliong, J.N.</strong>, Villagracia, A.R.C., Ong, H.L., et al.</span> (2019).
+            <span class="pub-title">H₂O Absorptivity on a Fully 4-crosslinked Polyacrylamide Membrane via Density Functional Theory and Monte Carlo Calculations for Draw Solution Recovery in Forward Osmosis.</span>
+            <em>2019 IEEE 11th HNICEM</em>, Laoag, Philippines.
+            <a href="https://doi.org/10.1109/HNICEM48295.2019.9072782" rel="noopener">doi:10.1109/HNICEM48295.2019.9072782</a>
+          </li>
+          <li>
+            <span class="pub-authors"><strong>Itliong, J.N.</strong>, Villagracia, A.R.C., Moreno, J.L.V., et al.</span> (2018).
+            <span class="pub-title">Density Functional Theory-based modeling and calculations of a polyamide molecular unit for studying forward-osmosis-dewatering of microalgae.</span>
+            <em>2018 IEEE 10th HNICEM</em>, Baguio City, Philippines.
+            <a href="https://doi.org/10.1109/HNICEM.2018.8666436" rel="noopener">doi:10.1109/HNICEM.2018.8666436</a>
+          </li>
+        </ol>
+
+        <h3 class="pub-group">Selected presentations</h3>
+        <ul class="pub-list pub-list-plain">
+          <li>
+            <span class="pub-title">Role of Cation Size and Dipolar Motion Restriction in the Viscosity of Polymerized Ionic Liquids.</span>
+            APS Global Physics Summit, Denver, CO — March 2026.
+          </li>
+          <li>
+            <span class="pub-title">Effects of Molecular Size and Polarity on Viscosity Scaling and Ionic Conductivity of Polymerized Ionic Liquids.</span>
+            APS Global Physics Summit, San Diego, CA — March 2025.
+          </li>
+          <li>
+            <span class="pub-title">Influences of Chain Polarity and Molecular Weight on Ion and Polymer Dynamics in Polymerized Ionic Liquids.</span>
+            APS March Meeting, Minneapolis, MN — March 2024.
+          </li>
+          <li>
+            <span class="pub-title">Effects of Electric Charge, Dipole Moment, and Molecular Size on the Viscosity of Ionic Liquids.</span>
+            APS March Meeting, Las Vegas, NV — March 2023.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ TEACHING ============ -->
+    <section id="teaching" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Teaching</h2>
+        <p class="section-intro">
+          More than seven years of teaching across university and K–12 settings in the US and
+          the Philippines — over 675 students in introductory and advanced physics courses,
+          with a focus on active learning, laboratory instruction, and scientific computing.
+        </p>
+        <div class="teaching-grid">
+          <div class="teaching-col">
+            <h3>Appointments</h3>
+            <ul class="cv-list">
+              <li>
+                <strong>Graduate Teaching Assistant</strong> — Michigan Technological University
+                <span class="cv-detail">2023 – 2024 · College Physics I Laboratory; Computational Methods in Physics (~75 students)</span>
+              </li>
+              <li>
+                <strong>Assistant Professorial Lecturer</strong> — De La Salle University
+                <span class="cv-detail">2018 – 2020 · Physics, Optics, Electronics, and Modern Physics Laboratories (100+ students/year)</span>
+              </li>
+              <li>
+                <strong>Instructor (Full-time)</strong> — EARIST
+                <span class="cv-detail">2017 – 2020 · Mechanics; Electromagnetism; Statistical Physics; Quantum Physics; Computational Physics (500+ students)</span>
+              </li>
+              <li>
+                <strong>K–12 Science Teacher &amp; College Instructor</strong> — De Ocampo Memorial College
+                <span class="cv-detail">2014 – 2015 · Biology, chemistry, and physics; pre-medical introductory courses</span>
+              </li>
+            </ul>
+          </div>
+          <div class="teaching-col">
+            <h3>Effectiveness &amp; mentoring</h3>
+            <ul class="cv-list">
+              <li>
+                <strong>Outstanding student evaluations</strong>
+                <span class="cv-detail">4.72/5.00 (AY 2018–19) and 4.88/5.00 (AY 2019–20), undergraduate physics laboratories</span>
+              </li>
+              <li>
+                <strong>Mentoring</strong>
+                <span class="cv-detail">Undergraduate and graduate students in molecular simulation, scientific programming, data analysis, and technical writing; trained incoming teaching assistants</span>
+              </li>
+              <li>
+                <strong>Curriculum development</strong>
+                <span class="cv-detail">Active-learning laboratory exercises and assessments; integrated Python and computational methods into advanced physics courses</span>
+              </li>
+            </ul>
+            <blockquote class="teaching-quote">
+              <p>“Teaches with clarity and depth.” · “Turns complicated topics understandable.” · “Very approachable and teaches amazingly.”</p>
+              <cite>— student evaluations, De La Salle University</cite>
+            </blockquote>
+          </div>
+        </div>
+        <div class="teaching-courses">
+          <h3>Prepared to teach</h3>
+          <ul class="chip-list">
+            <li>General Physics I &amp; II</li>
+            <li>Modern Physics</li>
+            <li>Statistical Physics</li>
+            <li>Computational Physics</li>
+            <li>Mathematical Methods in Physics</li>
+            <li>Soft Matter Physics</li>
+            <li>Scientific Programming with Python</li>
+            <li>Molecular Dynamics Simulations</li>
+            <li>Data Analysis &amp; Visualization</li>
+            <li>Physics Laboratories (Mechanics, E&amp;M, Optics, Electronics, Modern)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CV ============ -->
+    <section id="cv" class="section">
+      <div class="container">
+        <h2 class="section-title">Curriculum Vitae</h2>
+        <div class="cv-grid">
+          <div class="cv-col">
+            <h3>Education</h3>
+            <ul class="cv-list">
+              <li>
+                <strong>PhD in Physics</strong> — Michigan Technological University
+                <span class="cv-detail">2021 – present (expected July 2026) · GPA 4.00/4.00</span>
+              </li>
+              <li>
+                <strong>MS in Physics</strong> — De La Salle University, Manila
+                <span class="cv-detail">2017 · Atomistic MD of water/solute transport in polyamide membranes</span>
+              </li>
+              <li>
+                <strong>BS in Applied Physics</strong> (minor in Computer Science) — EARIST, Manila
+                <span class="cv-detail">2014 · Cum Laude</span>
+              </li>
+            </ul>
+            <h3>Selected honors</h3>
+            <ul class="cv-list">
+              <li><strong>Finalist</strong>, Midwest Regional 3-Minute Thesis Competition <span class="cv-detail">2026</span></li>
+              <li><strong>1st Place</strong>, Michigan Tech 3-Minute Thesis Competition <span class="cv-detail">2025</span></li>
+              <li><strong>Best Poster</strong>, Graduate Physics Colloquium, Michigan Tech <span class="cv-detail">2023</span></li>
+              <li><strong>Outstanding Faculty</strong>, EARIST College of Arts and Sciences <span class="cv-detail">2019</span></li>
+            </ul>
+          </div>
+          <div class="cv-col">
+            <h3>Technical skills</h3>
+            <ul class="cv-list">
+              <li><strong>Simulation &amp; modeling:</strong> molecular dynamics, coarse-grained modeling, statistical mechanics, rheology &amp; viscosity calculations, Monte Carlo</li>
+              <li><strong>Scientific computing &amp; HPC:</strong> Python, C++, Fortran, MPI/OpenMP, Slurm, Linux</li>
+              <li><strong>Software:</strong> LAMMPS, GROMACS, OVITO, VMD, Gaussian, Avogadro</li>
+              <li><strong>Data analysis:</strong> NumPy, SciPy, pandas, matplotlib, scientific data analysis</li>
+            </ul>
+            <h3>Experience</h3>
+            <ul class="cv-list">
+              <li><strong>Graduate Research Assistant</strong> — Michigan Tech <span class="cv-detail">2021 – present · Collaboration with Sandia National Laboratories</span></li>
+              <li><strong>Research Assistant</strong> — De La Salle University <span class="cv-detail">2018 – 2020</span></li>
+              <li><strong>Assistant Professorial Lecturer</strong> — De La Salle University <span class="cv-detail">2018 – 2020</span></li>
+              <li><strong>Instructor</strong> — EARIST <span class="cv-detail">2017 – 2020</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="cv-download">
+          <a class="btn btn-primary" href="assets/Itliong_CV_May_2026.pdf" download>Download full CV (PDF)</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ NEWS ============ -->
+    <section id="news" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">News</h2>
+        <ul class="news-list">
+          <li>
+            <a class="news-link" href="news/dissertation-defense.html">
+              <time datetime="2026-07">Jul 2026</time>
+              <span class="news-body">
+                <p>Dissertation defense scheduled for <strong>July 27, 2026</strong>: <em>Molecular Origins of Viscosity in Ionic and Polymerized Ionic Liquids: Insights from Stockmayer Fluid Simulations</em>.</p>
+                <span class="news-more">Read more →</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="news-link" href="news/aps-2026-denver.html">
+              <time datetime="2026-03">Mar 2026</time>
+              <span class="news-body">
+                <p>Presented two talks at the APS Global Physics Summit in Denver, CO, on viscosity in polymerized ionic liquids and ion transport in polyIL–LiTFSI blends.</p>
+                <span class="news-more">Read more →</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="news-link" href="news/3mt-midwest-finalist.html">
+              <time datetime="2026-03">Mar 2026</time>
+              <span class="news-body">
+                <p>Finalist in the Midwest Regional 3-Minute Thesis Competition in Kansas City, MO, representing Michigan Tech.</p>
+                <span class="news-more">Read more →</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="news-link" href="news/3mt-first-place.html">
+              <time datetime="2025-11">Nov 2025</time>
+              <span class="news-body">
+                <p>Won <strong>1st place</strong> in Michigan Tech's 3-Minute Thesis Competition.</p>
+                <span class="news-more">Read more →</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="news-link" href="news/jcp-paper.html">
+              <time datetime="2025-07">Jul 2025</time>
+              <span class="news-body">
+                <p>Paper published in <em>The Journal of Chemical Physics</em>: <em>Stockmayer Fluid Simulations for Viscosity and Glass Transition Temperature of Ionic Liquids</em>.</p>
+                <span class="news-more">Read more →</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ BLOG ============ -->
+    <section id="blog" class="section">
+      <div class="container">
+        <h2 class="section-title">Blog</h2>
+        <p class="section-intro">
+          Notes on topics I find interesting — physics, simulation, scientific computing,
+          teaching, and whatever else I'm curious about.
+        </p>
+        <div class="card-grid blog-grid">
+          <!-- To add a post: copy blog/post-template.html, write your post,
+               then duplicate one of these cards and point it at the new file. -->
+          <a class="card card-link" href="blog/post-template.html">
+            <p class="card-tag">Meta</p>
+            <h3>Welcome — and how this blog works</h3>
+            <p class="post-date">July 2026</p>
+            <p>
+              A short first post that doubles as the template for future ones —
+              with headings, figures, code, and quotes ready to copy.
+            </p>
+            <span class="card-more">Read more →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section section-alt">
+      <div class="container contact-container">
+        <h2 class="section-title">Contact</h2>
+        <p class="section-intro">
+          I'm happy to talk about postdoc openings, industry roles, teaching positions,
+          or anything related to simulation of charged soft matter.
+        </p>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-label">Email</span>
+            <a href="mailto:jesternitliong@gmail.com">jesternitliong@gmail.com</a>
+          </li>
+          <li>
+            <span class="contact-label">GitHub</span>
+            <a href="https://github.com/jnitlion" rel="noopener">github.com/jnitlion</a>
+          </li>
+          <li>
+            <span class="contact-label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/jnitliong-11/" rel="noopener">linkedin.com/in/jnitliong-11</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

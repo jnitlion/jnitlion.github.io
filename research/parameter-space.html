@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viscosity Across Ionic-Liquid Parameter Space — Jes Itliong</title>
+  <meta name="description" content="A systematic molecular dynamics study of how charge, dipole moment and mobility, ion size, and chain length govern the viscosity of ionic liquids.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article class="article">
+      <div class="container article-container">
+
+        <p class="article-breadcrumb"><a href="../index.html#research">← Back to Research</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Design rules</p>
+          <h1>Viscosity Across Ionic-Liquid Parameter Space</h1>
+          <p class="article-meta">
+            Presented at the APS March Meeting (Las Vegas, 2023) · builds on
+            <a href="https://doi.org/10.1063/5.0268727" rel="noopener"><em>J. Chem. Phys.</em> 163, 044503 (2025)</a>
+          </p>
+        </header>
+
+        <!-- Starter summary — rewrite this prose in your own voice.
+             Swap each .figure-placeholder for an <img> when figures are ready. -->
+
+        <h2>The question</h2>
+        <p>
+          If you could turn one molecular "knob" to make an ionic liquid less viscous, which
+          knob should it be? Experiments can only compare the chemistries that get
+          synthesized; a coarse-grained model lets us vary one property at a time, cleanly,
+          across ranges no single family of compounds can span.
+        </p>
+
+        <h2>What we did</h2>
+        <p>
+          Using the validated Stockmayer framework, we systematically varied electric
+          charge, dipole moment and dipole mobility, ion size, and chain length, computing
+          viscosity for each point in parameter space with Green–Kubo methods in LAMMPS.
+          The automated Python/Slurm workflow made it practical to cover hundreds of
+          state points on HPC resources.
+        </p>
+
+        <figure class="figure-slot">
+          <div class="figure-placeholder" role="img" aria-label="Placeholder for a map of viscosity across the ionic-liquid parameter space">
+            <span>Figure slot — e.g., viscosity map across charge / dipole / size parameter space</span>
+          </div>
+          <figcaption>How viscosity responds to each molecular parameter. <em>(Replace with your figure and caption.)</em></figcaption>
+        </figure>
+
+        <h2>What we found</h2>
+        <p>
+          Each molecular property leaves a distinct fingerprint on the viscosity, and
+          separating them isolates concrete, molecular-level design rules for engineering
+          low-viscosity ionic liquids — guidance that would be prohibitively expensive to
+          obtain by synthesizing and measuring candidate compounds one at a time.
+        </p>
+
+        <figure class="figure-slot">
+          <div class="figure-placeholder" role="img" aria-label="Placeholder for a second figure, for example scaling trends of viscosity with dipole moment or ion size">
+            <span>Figure slot — e.g., viscosity scaling trends with dipole moment or ion size</span>
+          </div>
+          <figcaption><em>(Replace with your figure and caption, or delete this block.)</em></figcaption>
+        </figure>
+
+        <nav class="article-nav" aria-label="More research">
+          <a href="stockmayer-ean.html">← Previous: The Stockmayer EAN model</a>
+          <a href="polymerized-ionic-liquids.html">Next: Polymerized ionic liquids →</a>
+        </nav>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

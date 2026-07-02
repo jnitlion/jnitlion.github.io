@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome — and How This Blog Works — Jes Itliong</title>
+  <meta name="description" content="First post on Jes Itliong's blog, doubling as the template for future posts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article class="article">
+      <div class="container article-container">
+
+        <p class="article-breadcrumb"><a href="../index.html#blog">← Back to Blog</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Meta</p>
+          <h1>Welcome — and How This Blog Works</h1>
+          <p class="article-meta"><time datetime="2026-07-02">July 2, 2026</time> · Jes Itliong</p>
+        </header>
+
+        <!-- ==============================================================
+             HOW TO ADD A NEW POST
+             1. Copy this file, e.g.  blog/why-viscosity-matters.html
+             2. Update <title>, the h1, the date, and write your post.
+             3. In index.html, duplicate a blog card in the #blog section
+                and point it at the new file (newest posts first).
+             The elements below (headings, figure, code, quote) are the
+             building blocks you can copy, reorder, or delete.
+             ============================================================== -->
+
+        <p>
+          This is the first post — and also the template for every future one. I'll use this
+          space to write about topics I find interesting: physics, molecular simulation,
+          scientific computing, teaching, and whatever else I'm curious about.
+        </p>
+
+        <h2>A section heading looks like this</h2>
+        <p>
+          Regular paragraphs are just <code>&lt;p&gt;</code> tags. You can link to
+          <a href="../research/stockmayer-ean.html">research pages</a>, external sites, or
+          papers by DOI. Inline code like <code>fix nvt</code> gets highlighted automatically.
+        </p>
+
+        <figure class="figure-slot">
+          <div class="figure-placeholder" role="img" aria-label="Placeholder for a post image, diagram, or plot">
+            <span>Figure slot — drop any image, diagram, or plot here</span>
+          </div>
+          <figcaption>Captions go here. Swap the placeholder for <code>&lt;img src="../assets/your-image.png" alt="..."&gt;</code>.</figcaption>
+        </figure>
+
+        <h2>Code blocks and quotes</h2>
+        <p>For longer code, use a preformatted block:</p>
+        <pre><code># compute shear viscosity from the stress autocorrelation function
+eta = (V / (k_B * T)) * np.trapz(acf, dx=dt)</code></pre>
+
+        <blockquote class="post-quote">
+          <p>Block quotes are handy for pull-quotes, definitions, or things other people said.</p>
+        </blockquote>
+
+        <p>
+          That's everything a post needs. Delete what you don't use — shorter is better.
+        </p>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
