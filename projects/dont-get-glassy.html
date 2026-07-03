@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Don't Get Glassy — The Game — Jes Itliong</title>
+  <meta name="description" content="Survive the quench: a browser game about the glass transition. Your liquid is being cooled toward vitrification — fight the spreading frost with a limited heat gun.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .game-wrap { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem; }
+    #game-holder {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      cursor: crosshair;
+    }
+    #game-canvas { display: block; width: 100%; }
+    .game-hud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      align-items: center;
+      margin: 0.9rem 0 0.4rem;
+      font-size: 0.9rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .hud-chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+    }
+    .hud-chip b { color: var(--ink); }
+    .meter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.4rem 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .meter-track {
+      flex: 1;
+      height: 10px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    #heat-fill { height: 100%; width: 100%; background: #b45309; transition: width 0.15s linear; }
+    #frost-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7ea8a3, #cfe0dd); transition: width 0.2s linear; }
+    .game-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .game-controls button {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--ink-soft);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--ink);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .game-controls button:hover { background: var(--ink); color: #fff; }
+    .game-controls button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .game-controls button.primary:hover { background: var(--accent-hover); }
+    .game-controls button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+    #game-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      text-align: center;
+      background: rgba(250, 246, 239, 0.92);
+      padding: 1.5rem;
+    }
+    #game-overlay h2 { margin: 0; font-size: 1.5rem; }
+    #game-overlay p { margin: 0; max-width: 30rem; }
+    #game-overlay .big { font-size: 2.2rem; font-weight: 700; color: var(--accent); font-family: var(--font-head); }
+    .game-about { max-width: 46rem; margin: 2.5rem auto 0; }
+    .game-about h2 { font-size: 1.4rem; margin: 2rem 0 0.75rem; }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="article">
+      <div class="game-wrap">
+
+        <p class="article-breadcrumb"><a href="../index.html#projects">← Back to Projects</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Game</p>
+          <h1>Don't Get Glassy</h1>
+          <p class="article-meta">
+            Your liquid is being quenched toward the glass transition. Frozen regions turn
+            <span style="color:#8fb3ae;font-weight:600">frosty</span> and spread.
+            <strong>Hold anywhere</strong> to fire the heat gun and melt them — but heat is
+            limited and the cooling never stops. Survive as long as you can.
+          </p>
+        </header>
+
+        <div class="game-controls">
+          <span style="font-size:0.85rem;color:var(--text-muted)">Cooling rate:</span>
+          <button type="button" class="diff-btn" data-diff="anneal">Slow cool</button>
+          <button type="button" class="diff-btn" data-diff="quench" aria-pressed="true">Quench</button>
+          <button type="button" class="diff-btn" data-diff="splat">Splat quench</button>
+          <button type="button" id="btn-start" class="primary">Start</button>
+        </div>
+
+        <div id="game-holder">
+          <canvas id="game-canvas"></canvas>
+          <div id="game-overlay">
+            <h2>Don't Get Glassy</h2>
+            <p>A liquid that cools too fast to crystallize doesn't freeze — it <em>vitrifies</em>:
+               molecules slow down until they're trapped mid-disorder. That's the glass
+               transition, and tonight it's coming for your simulation box.</p>
+            <p><strong>Hold</strong> mouse / touch to heat the region under your cursor.
+               Keep the liquid liquid. When ~85% freezes, it's over.</p>
+            <p id="overlay-score"></p>
+          </div>
+        </div>
+
+        <div class="game-hud" aria-live="off">
+          <span class="hud-chip">⏱ survived <b id="hud-time">0.0</b> s</span>
+          <span class="hud-chip">T = <b id="hud-temp">–</b></span>
+          <span class="hud-chip">frozen: <b id="hud-frozen">0%</b></span>
+          <span class="hud-chip">best: <b id="hud-best">–</b></span>
+        </div>
+        <div class="meter-row">
+          <span style="min-width:6.5rem">heat budget</span>
+          <div class="meter-track"><div id="heat-fill"></div></div>
+        </div>
+        <div class="meter-row">
+          <span style="min-width:6.5rem">vitrification</span>
+          <div class="meter-track"><div id="frost-fill"></div></div>
+        </div>
+
+        <div class="game-about">
+          <h2>The physics you're fighting</h2>
+          <p>
+            Cool a liquid slowly and it usually crystallizes: molecules find their ordered,
+            low-energy arrangement. Cool it fast enough and they don't get the chance — the
+            liquid's own sluggishness outruns its search for order, relaxation times explode
+            from picoseconds toward centuries, and the material solidifies while still
+            structurally a liquid. That kinetic arrest is the <strong>glass transition</strong>,
+            and the temperature where viscosity reaches a staggering 10<sup>12</sup> Pa·s is
+            called T<sub>g</sub>. It's one of the deepest unsolved problems in condensed matter
+            physics — and the central character of
+            <a href="../research/stockmayer-ean.html">my dissertation</a>, where we extract
+            T<sub>g</sub> from simulated viscosity curves of ionic liquids.
+          </p>
+          <p>
+            Two honest details are baked into the game. First, the particles come in two sizes:
+            a one-size liquid in 2D crystallizes almost instantly on cooling, so simulators use
+            <em>bidisperse mixtures</em> to frustrate crystallization — the same trick used in
+            real glass-transition research. Second, your inevitable defeat is physically
+            faithful: at fixed density, with the thermostat marching downward, vitrification
+            isn't a puzzle you can solve — only postpone. The game's real question is the same
+            one my research asks: <em>what controls how long you can keep a cooling liquid
+            mobile?</em>
+          </p>
+
+          <h2>What this game simplifies</h2>
+          <p>
+            The "molecules" are soft repulsive disks with Langevin dynamics — no attractions,
+            no chemistry, and a local "frozen" label based on each particle's recent mobility
+            rather than a proper relaxation-function analysis. Your heat gun is a cheerful
+            fiction (real experimentalists cannot locally reheat a quenching melt with a
+            crosshair, much as they might wish to). And the cooling rates here are, by
+            molecular standards, apocalyptic. For the real thing — VFT fits, fragility, and
+            T<sub>g</sub> from transport — see the
+            <a href="../index.html#research">research section</a>.
+          </p>
+          <p>
+            Built with plain JavaScript and a &lt;canvas&gt;. Companion to
+            <a href="maxwells-demon.html">Maxwell's Demon</a> and the
+            <a href="stockmayer-simulator.html">Stockmayer fluid simulator</a>.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------- tunables ---------- */
+    var DIFFS = {                       // temperature decay time constants (s)
+      anneal: { tau: 55, label: "Slow cool" },
+      quench: { tau: 35, label: "Quench" },
+      splat:  { tau: 20, label: "Splat quench" },
+    };
+    var N = 150;                        // particles
+    var SMALL_FRAC = 0.45;              // fraction of small disks (bidisperse)
+    var R_BIG = 9, R_SMALL = 6;         // radii (css px)
+    var K_REP = 900;                    // contact stiffness
+    var GAMMA = 2.2;                    // Langevin friction (1/s)
+    var T0 = 5200;                      // initial temperature (px^2/s^2 scale)
+    var T_FLOOR = 40;                   // thermostat floor
+    var MOB_FREEZE = 26;                // speed EMA below this = frozen (px/s)
+    var MOB_EMA = 1.6;                  // mobility smoothing rate (1/s)
+    var FROZEN_LIMIT = 0.85;            // game over when this fraction frozen...
+    var FROZEN_HOLD = 2.0;              // ...sustained this long (s)
+    var HEAT_RADIUS = 85;               // heat gun radius (px)
+    var HEAT_TEMP = 9000;               // local temperature while heating
+    var HEAT_DRAIN = 0.28;              // budget/s while firing (~3.5 s tank)
+    var HEAT_REGEN = 0.12;              // budget/s recharge
+    var FROST = { r: 207, g: 224, b: 221 };  // frozen tint
+
+    /* ---------- state ---------- */
+    var canvas = document.getElementById("game-canvas");
+    var ctx = canvas.getContext("2d");
+    var holder = document.getElementById("game-holder");
+    var overlay = document.getElementById("game-overlay");
+    var diff = "quench";
+    var W = 0, H = 0, DPR = 1;
+    var parts = [];                     // {x,y,vx,vy,r,small,mob}
+    var running = false, lastT = 0;
+    var elapsed = 0, Tglobal = T0, heat = 1, frozenTimer = 0;
+    var firing = false, aim = { x: 0, y: 0 };
+
+    function resize() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = holder.clientWidth;
+      H = Math.max(300, Math.round(W * 0.55));
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
+      canvas.style.height = H + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      draw();
+    }
+    window.addEventListener("resize", resize);
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+    function gauss() {
+      var u = 0, v = 0;
+      while (!u) u = Math.random();
+      while (!v) v = Math.random();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    }
+
+    function init() {
+      parts = [];
+      var cols = Math.ceil(Math.sqrt(N * W / H));
+      var rows = Math.ceil(N / cols);
+      var k = 0;
+      for (var iy = 0; iy < rows && k < N; iy++) {
+        for (var ix = 0; ix < cols && k < N; ix++) {
+          var small = Math.random() < SMALL_FRAC;
+          var s = Math.sqrt(T0);
+          parts.push({
+            x: (ix + 0.5) * W / cols + rand(-3, 3),
+            y: (iy + 0.5) * H / rows + rand(-3, 3),
+            vx: s * gauss() * 0.7, vy: s * gauss() * 0.7,
+            r: small ? R_SMALL : R_BIG,
+            small: small,
+            mob: 200,                    // start "mobile"
+          });
+          k++;
+        }
+      }
+      elapsed = 0; Tglobal = T0; heat = 1; frozenTimer = 0; firing = false;
+    }
+
+    /* ---------- physics ---------- */
+    function step(dt) {
+      var tau = DIFFS[diff].tau;
+      Tglobal = Math.max(T_FLOOR, T0 * Math.exp(-elapsed / tau));
+
+      if (firing && heat > 0) heat = Math.max(0, heat - HEAT_DRAIN * dt);
+      else heat = Math.min(1, heat + HEAT_REGEN * dt);
+      var gunOn = firing && heat > 0;
+
+      var i, j, p;
+      // pair repulsion (soft disks)
+      for (i = 0; i < N; i++) {
+        p = parts[i];
+        for (j = i + 1; j < N; j++) {
+          var q = parts[j];
+          var dx = q.x - p.x, dy = q.y - p.y;
+          var rsum = p.r + q.r;
+          var d2 = dx * dx + dy * dy;
+          if (d2 < rsum * rsum && d2 > 1e-9) {
+            var d = Math.sqrt(d2);
+            var f = K_REP * (rsum - d) / rsum;
+            var fx = f * dx / d, fy = f * dy / d;
+            p.vx -= fx * dt; p.vy -= fy * dt;
+            q.vx += fx * dt; q.vy += fy * dt;
+          }
+        }
+      }
+      // Langevin thermostat + integrate + walls + mobility
+      for (i = 0; i < N; i++) {
+        p = parts[i];
+        var Tloc = Tglobal;
+        if (gunOn) {
+          var ax = p.x - aim.x, ay = p.y - aim.y;
+          if (ax * ax + ay * ay < HEAT_RADIUS * HEAT_RADIUS) Tloc = HEAT_TEMP;
+        }
+        var sig = Math.sqrt(2 * GAMMA * Tloc * dt);
+        p.vx += (-GAMMA * p.vx) * dt + sig * gauss();
+        p.vy += (-GAMMA * p.vy) * dt + sig * gauss();
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        if (p.x < p.r) { p.x = p.r; p.vx = Math.abs(p.vx); }
+        if (p.x > W - p.r) { p.x = W - p.r; p.vx = -Math.abs(p.vx); }
+        if (p.y < p.r) { p.y = p.r; p.vy = Math.abs(p.vy); }
+        if (p.y > H - p.r) { p.y = H - p.r; p.vy = -Math.abs(p.vy); }
+        var speed = Math.hypot(p.vx, p.vy);
+        p.mob += (speed - p.mob) * Math.min(1, MOB_EMA * dt);
+      }
+    }
+
+    function frozenFraction() {
+      var f = 0;
+      for (var i = 0; i < N; i++) if (parts[i].mob < MOB_FREEZE) f++;
+      return f / N;
+    }
+
+    /* ---------- drawing ---------- */
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function draw() {
+      ctx.fillStyle = "#fffdf9";
+      ctx.fillRect(0, 0, W, H);
+      for (var i = 0; i < N && i < parts.length; i++) {
+        var p = parts[i];
+        // 1 = fully mobile, 0 = frozen
+        var m = Math.max(0, Math.min(1, (p.mob - MOB_FREEZE * 0.6) / (MOB_FREEZE * 2)));
+        var base = p.small ? { r: 180, g: 83, b: 9 } : { r: 30, g: 92, b: 88 };
+        var r = Math.round(lerp(FROST.r, base.r, m));
+        var g = Math.round(lerp(FROST.g, base.g, m));
+        var b = Math.round(lerp(FROST.b, base.b, m));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        ctx.fill();
+        if (m < 0.15) {               // frost outline on frozen particles
+          ctx.strokeStyle = "rgba(126, 168, 163, 0.8)";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      }
+      // heat gun glow
+      if (firing && heat > 0 && running) {
+        var grd = ctx.createRadialGradient(aim.x, aim.y, 6, aim.x, aim.y, HEAT_RADIUS);
+        grd.addColorStop(0, "rgba(217, 119, 6, 0.30)");
+        grd.addColorStop(1, "rgba(217, 119, 6, 0)");
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(aim.x, aim.y, HEAT_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    /* ---------- HUD / flow ---------- */
+    var $ = function (id) { return document.getElementById(id); };
+    function bestKey() { return "glassy-best-" + diff; }
+    function showBest() {
+      var b = localStorage.getItem(bestKey());
+      $("hud-best").textContent = b ? (+b).toFixed(1) + " s" : "–";
+    }
+    function hud() {
+      var ff = frozenFraction();
+      $("hud-time").textContent = elapsed.toFixed(1);
+      $("hud-temp").textContent = (Tglobal / T0).toFixed(2);
+      $("hud-frozen").textContent = Math.round(ff * 100) + "%";
+      $("heat-fill").style.width = (heat * 100).toFixed(0) + "%";
+      $("frost-fill").style.width = (ff * 100).toFixed(0) + "%";
+      return ff;
+    }
+
+    function start() {
+      init();
+      overlay.style.display = "none";
+      running = true;
+      lastT = performance.now();
+      $("btn-start").textContent = "Restart";
+      showBest();
+    }
+
+    function finish() {
+      running = false;
+      var t = elapsed;
+      var best = parseFloat(localStorage.getItem(bestKey()) || "0");
+      var record = t > best;
+      if (record) localStorage.setItem(bestKey(), t.toFixed(1));
+      showBest();
+      overlay.querySelector("h2").textContent = record ? "New record — still glassy though" : "Vitrified!";
+      overlay.querySelectorAll("p")[0].innerHTML =
+        "Your liquid survived <b>" + t.toFixed(1) + " s</b> of " +
+        DIFFS[diff].label.toLowerCase() + " before the glass won.";
+      overlay.querySelectorAll("p")[1].innerHTML =
+        "Somewhere around T/T<sub>0</sub> = " + (Tglobal / T0).toFixed(2) +
+        ", your relaxation times quietly became geological.";
+      $("overlay-score").innerHTML = '<span class="big">' + t.toFixed(1) + " s</span>";
+      overlay.style.display = "flex";
+    }
+
+    function loop(t) {
+      requestAnimationFrame(loop);
+      if (!running) return;
+      var dt = Math.min(0.03, (t - lastT) / 1000);
+      lastT = t;
+      elapsed += dt;
+      step(dt);
+      draw();
+      var ff = hud();
+      if (ff >= FROZEN_LIMIT) {
+        frozenTimer += dt;
+        if (frozenTimer >= FROZEN_HOLD) finish();
+      } else {
+        frozenTimer = Math.max(0, frozenTimer - dt);
+      }
+    }
+
+    /* ---------- input ---------- */
+    function setAim(e) {
+      var rect = canvas.getBoundingClientRect();
+      aim.x = (e.clientX - rect.left);
+      aim.y = (e.clientY - rect.top);
+    }
+    holder.addEventListener("pointerdown", function (e) {
+      e.preventDefault(); setAim(e); firing = true;
+    });
+    holder.addEventListener("pointermove", function (e) { setAim(e); });
+    window.addEventListener("pointerup", function () { firing = false; });
+    document.addEventListener("visibilitychange", function () { lastT = performance.now(); });
+
+    var diffBtns = document.querySelectorAll(".diff-btn");
+    diffBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        diff = b.dataset.diff;
+        diffBtns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        showBest();
+        if (running) start();
+      });
+    });
+    $("btn-start").addEventListener("click", start);
+
+    /* ---------- boot ---------- */
+    resize();
+    init();
+    draw();
+    showBest();
+    requestAnimationFrame(loop);
+
+    // deterministic driver for automated testing
+    window.__glassyTest = {
+      start: start,
+      fire: function (on, x, y) { firing = on; if (x !== undefined) { aim.x = x; aim.y = y; } },
+      tick: function (seconds) {
+        var n = Math.round(seconds / 0.016);
+        for (var i = 0; i < n; i++) {
+          if (!running) break;
+          elapsed += 0.016;
+          step(0.016);
+          var ff = frozenFraction();
+          if (ff >= FROZEN_LIMIT) { frozenTimer += 0.016; if (frozenTimer >= FROZEN_HOLD) { finish(); } }
+          else frozenTimer = Math.max(0, frozenTimer - 0.016);
+        }
+        draw();
+        return { elapsed: elapsed, T: Tglobal / T0, frozen: frozenFraction(), heat: heat, running: running };
+      },
+      jumpTemp: function (factor) { Tglobal = T0 * factor; elapsed = -DIFFS[diff].tau * Math.log(factor); },
+    };
+  })();
+  </script>
+  <script data-goatcounter="https://jnitlion.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
