@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atomistic vs. Coarse-Grained MD: A Long, Heated, Unnecessary Battle — Jes Itliong</title>
+  <meta name="description" content="Why the atomistic vs. coarse-grained argument in molecular dynamics never resolves — and why the right resolution was always determined by the question, not the tribe.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article class="article">
+      <div class="container article-container">
+
+        <p class="article-breadcrumb"><a href="../index.html#blog">← Back to Blog</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Simulation</p>
+          <h1>Atomistic vs. Coarse-Grained MD: A Long, Heated, and Mostly Unnecessary Battle</h1>
+          <p class="article-meta"><time datetime="2026-07-02">July 2, 2026</time> · Jes Itliong</p>
+        </header>
+
+        <p>
+          Every field has its tribal argument. Molecular dynamics has a durable one: should you
+          simulate matter <em>atomistically</em>, with every atom (sometimes every electron cloud's
+          ghost) accounted for — or <em>coarse-grained</em>, with groups of atoms lumped into beads
+          that keep only the physics you believe matters?
+        </p>
+        <p>
+          Full disclosure: I have a horse in this race. My dissertation reduces entire ionic
+          liquids to spheres carrying a charge and a dipole. So take what follows as an insider's
+          attempt to be fair to both camps — including mine.
+        </p>
+
+        <figure class="figure-slot">
+          <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img"
+               aria-label="Diagram showing an atomistic molecule being mapped to coarse-grained beads"
+               style="width:100%;height:auto;">
+            <rect x="0" y="0" width="720" height="260" fill="#fffdf9" rx="10"/>
+            <!-- atomistic side -->
+            <text x="150" y="34" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700"
+                  fill="#123c3a" text-anchor="middle">Atomistic</text>
+            <text x="150" y="54" font-family="Inter,Arial,sans-serif" font-size="12"
+                  fill="#64716e" text-anchor="middle">every atom, every bond</text>
+            <!-- molecule: ring + tail -->
+            <g stroke="#1e5c58" stroke-width="2" fill="none">
+              <polygon points="110,120 140,105 170,120 170,150 140,165 110,150"/>
+              <line x1="170" y1="120" x2="200" y2="105"/>
+              <line x1="200" y1="105" x2="230" y2="120"/>
+              <line x1="230" y1="120" x2="258" y2="105"/>
+            </g>
+            <g fill="#1e5c58">
+              <circle cx="110" cy="120" r="7"/><circle cx="140" cy="105" r="7"/>
+              <circle cx="170" cy="120" r="7"/><circle cx="170" cy="150" r="7"/>
+              <circle cx="140" cy="165" r="7"/><circle cx="110" cy="150" r="7"/>
+            </g>
+            <g fill="#3d7a75">
+              <circle cx="200" cy="105" r="6"/><circle cx="230" cy="120" r="6"/><circle cx="258" cy="105" r="6"/>
+            </g>
+            <!-- small hydrogens -->
+            <g fill="#b9c6c3">
+              <circle cx="95" cy="108" r="4"/><circle cx="140" cy="90" r="4"/><circle cx="95" cy="162" r="4"/>
+              <circle cx="140" cy="180" r="4"/><circle cx="200" cy="90" r="4"/><circle cx="230" cy="136" r="4"/>
+              <circle cx="272" cy="94" r="4"/><circle cx="268" cy="118" r="4"/>
+            </g>
+            <text x="150" y="215" font-family="Inter,Arial,sans-serif" font-size="12"
+                  fill="#64716e" text-anchor="middle">~25 atoms · femtosecond steps</text>
+            <!-- arrow -->
+            <g>
+              <line x1="310" y1="132" x2="400" y2="132" stroke="#b45309" stroke-width="3"/>
+              <polygon points="400,124 416,132 400,140" fill="#b45309"/>
+              <text x="360" y="115" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="600"
+                    fill="#b45309" text-anchor="middle">mapping</text>
+              <text x="360" y="160" font-family="Inter,Arial,sans-serif" font-size="11"
+                    fill="#64716e" text-anchor="middle">integrate out detail,</text>
+              <text x="360" y="175" font-family="Inter,Arial,sans-serif" font-size="11"
+                    fill="#64716e" text-anchor="middle">keep the physics</text>
+            </g>
+            <!-- CG side -->
+            <text x="560" y="34" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700"
+                  fill="#123c3a" text-anchor="middle">Coarse-grained</text>
+            <text x="560" y="54" font-family="Inter,Arial,sans-serif" font-size="12"
+                  fill="#64716e" text-anchor="middle">beads with effective interactions</text>
+            <circle cx="510" cy="132" r="26" fill="#1e5c58"/>
+            <circle cx="580" cy="118" r="20" fill="#3d7a75"/>
+            <line x1="536" y1="132" x2="560" y2="122" stroke="#123c3a" stroke-width="4"/>
+            <!-- dipole arrow on big bead -->
+            <line x1="498" y1="144" x2="524" y2="118" stroke="#b45309" stroke-width="3.5"/>
+            <polygon points="519,112 532,110 526,124" fill="#b45309"/>
+            <text x="560" y="215" font-family="Inter,Arial,sans-serif" font-size="12"
+                  fill="#64716e" text-anchor="middle">2 beads (+ dipole) · 100× longer timescales</text>
+          </svg>
+          <figcaption>
+            Fig. 1 — The trade at the heart of the argument: an atomistic molecule (left) is mapped
+            to a few coarse-grained beads with effective interactions (right). Chemical identity is
+            traded for reach in time and system size.
+          </figcaption>
+        </figure>
+
+        <h2>The case for atoms</h2>
+        <p>
+          The atomistic argument is easy to respect: <strong>chemistry is in the details.</strong>
+          Swap one anion for another, add a methyl group, move a charge — real materials respond to
+          these changes, and an all-atom force field can too. Atomistic MD offers quantitative
+          predictions for specific compounds, direct comparison against spectroscopy and scattering,
+          and no awkward questions about what a "bead" means. When it's parameterized well, it is the
+          closest thing simulation has to a virtual experiment.
+        </p>
+        <p>
+          The cost is brutal, though. Femtosecond time steps mean that a microsecond is a heroic
+          run. And the properties I care about — viscosity of an ionic liquid near its glass
+          transition, chain relaxation in a polymer melt — live at microseconds and beyond. The
+          all-atom simulation that can't reach the relaxation time doesn't give you a slightly
+          worse viscosity; it gives you <em>no viscosity at all</em>.
+        </p>
+
+        <h2>The case for beads</h2>
+        <p>
+          The coarse-grained argument is just as principled: <strong>most microscopic detail is
+          irrelevant to macroscopic behavior.</strong> This isn't laziness — it's renormalization,
+          one of the deepest ideas in physics. Polymer scaling laws don't care about bond angles.
+          The glass transition doesn't care which force field version you used. If a property is
+          universal, a minimal model doesn't just approximate the physics — it <em>isolates</em> it.
+        </p>
+        <p>
+          In my own work, a Stockmayer fluid — spheres with a point charge and a point dipole —
+          <a href="../research/stockmayer-ean.html">quantitatively reproduces the viscosity and
+          glass-transition behavior of ethylammonium nitrate</a>. Not "qualitatively captures
+          trends": reproduces experiment. And because the model has four knobs instead of four
+          hundred, we could then <a href="../research/parameter-space.html">turn each knob
+          independently</a> and map which molecular properties actually control viscosity — an
+          experiment no lab and no all-atom study could afford to run.
+        </p>
+        <p>
+          The costs are real here too. Coarse-graining buys speed partly through smoother energy
+          landscapes, which means dynamics are artificially fast and must be interpreted through
+          rescaling. Effective potentials fit at one state point may quietly fail at another — the
+          <em>transferability problem</em> — and by construction, a CG model cannot answer questions
+          about the details it integrated out. Ask my Stockmayer beads about hydrogen-bond network
+          topology, and they will stare back blankly.
+        </p>
+
+        <figure class="figure-slot">
+          <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" role="img"
+               aria-label="Chart of length and time scales accessible to atomistic and coarse-grained MD"
+               style="width:100%;height:auto;">
+            <rect x="0" y="0" width="720" height="340" fill="#fffdf9" rx="10"/>
+            <!-- axes -->
+            <line x1="90" y1="280" x2="670" y2="280" stroke="#123c3a" stroke-width="2"/>
+            <line x1="90" y1="280" x2="90" y2="30" stroke="#123c3a" stroke-width="2"/>
+            <polygon points="670,274 684,280 670,286" fill="#123c3a"/>
+            <polygon points="84,30 90,16 96,30" fill="#123c3a"/>
+            <text x="380" y="320" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600"
+                  fill="#123c3a" text-anchor="middle">time scale (log)</text>
+            <text x="34" y="160" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="600"
+                  fill="#123c3a" text-anchor="middle" transform="rotate(-90 34 160)">length scale (log)</text>
+            <!-- tick labels -->
+            <g font-family="Inter,Arial,sans-serif" font-size="11" fill="#64716e" text-anchor="middle">
+              <text x="150" y="298">fs</text><text x="270" y="298">ps</text>
+              <text x="390" y="298">ns</text><text x="510" y="298">µs</text><text x="630" y="298">ms</text>
+            </g>
+            <g font-family="Inter,Arial,sans-serif" font-size="11" fill="#64716e" text-anchor="end">
+              <text x="82" y="262">Å</text><text x="82" y="180">nm</text><text x="82" y="95">µm</text>
+            </g>
+            <!-- QM box -->
+            <rect x="100" y="230" width="90" height="42" rx="6" fill="#b9c6c3" opacity="0.55"/>
+            <text x="145" y="256" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="600"
+                  fill="#33403e" text-anchor="middle">QM / DFT</text>
+            <!-- AA box -->
+            <rect x="150" y="150" width="220" height="105" rx="8" fill="#1e5c58" opacity="0.78"/>
+            <text x="260" y="196" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700"
+                  fill="#fdfaf4" text-anchor="middle">Atomistic MD</text>
+            <text x="260" y="215" font-family="Inter,Arial,sans-serif" font-size="11"
+                  fill="#e8e2d4" text-anchor="middle">chemistry-specific · fs–ns</text>
+            <!-- CG box -->
+            <rect x="300" y="80" width="270" height="120" rx="8" fill="#b45309" opacity="0.72"/>
+            <text x="435" y="131" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700"
+                  fill="#fff8ee" text-anchor="middle">Coarse-grained MD</text>
+            <text x="435" y="150" font-family="Inter,Arial,sans-serif" font-size="11"
+                  fill="#fff2df" text-anchor="middle">universal mechanisms · ns–µs+</text>
+            <!-- continuum box -->
+            <rect x="520" y="40" width="140" height="55" rx="6" fill="#b9c6c3" opacity="0.55"/>
+            <text x="590" y="72" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="600"
+                  fill="#33403e" text-anchor="middle">Continuum</text>
+            <!-- overlap annotation -->
+            <line x1="335" y1="165" x2="335" y2="230" stroke="#123c3a" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="342" y="243" font-family="Inter,Arial,sans-serif" font-size="11" fill="#123c3a">
+              overlap region: validate CG against AA here</text>
+          </svg>
+          <figcaption>
+            Fig. 2 — Each method owns a patch of length–time space. The overlap regions are not
+            battlegrounds; they're calibration zones, where one resolution validates and
+            parameterizes the next.
+          </figcaption>
+        </figure>
+
+        <h2>Why the argument stays heated</h2>
+        <p>
+          If the trade-offs are this clear, why does the battle persist? Partly incentives:
+          methods are careers. If you spent a decade building polarizable force fields, a paper
+          claiming two-parameter beads reproduce experiment can feel like an attack on the decade.
+          If you build minimal models, force-field papers can read like stamp collecting. Both
+          reactions are human, and both are strawmen.
+        </p>
+        <p>
+          The atomistic camp's caricature — <em>"coarse-grained models are cartoons that can't
+          predict anything real"</em> — is answered by every CG study that survives quantitative
+          contact with experiment. The CG camp's caricature — <em>"atomistic detail is expensive
+          noise"</em> — is answered every time a property turns out to hinge on a hydrogen bond,
+          a specific ion pairing, a chemically distinct conformation. Neither caricature survives
+          contact with an actual research problem.
+        </p>
+
+        <h2>The resolution: the question picks the resolution</h2>
+        <p>
+          Here is the synthesis, and it's almost embarrassingly simple:
+          <strong>the choice of model is determined by the system and the property you're asking
+          about — not by loyalty.</strong>
+        </p>
+        <ul>
+          <li>
+            Want the viscosity of <em>this specific compound</em> at 300 K, or the effect of
+            replacing one anion in a screening study? You need chemistry. Go atomistic (and budget
+            accordingly).
+          </li>
+          <li>
+            Want to know <em>which class of molecular features</em> controls viscosity, or the
+            scaling of chain relaxation with molecular weight, or behavior near the glass
+            transition where relaxation times explode? You need reach and clean parameters. Go
+            coarse-grained.
+          </li>
+          <li>
+            Want both? Use both — deliberately. Parameterize beads from atomistic runs, validate
+            in the overlap window (Fig. 2), push the CG model into territory atoms can't reach,
+            and back-map when you need detail restored.
+          </li>
+        </ul>
+        <p>
+          My own workflow is exactly this armistice. Molecular parameters come from the real
+          compound. The Stockmayer model earns trust by reproducing experimental viscosity where
+          data exists. Only then does it get used where neither experiment nor atomistic simulation
+          can go. The two resolutions aren't rivals in that pipeline — they're stages.
+        </p>
+        <p>
+          The "battle," in the end, is a category error: it treats a modeling decision as an
+          identity. The sharper question — the one worth being tribal about — is whether the model,
+          at whatever resolution, makes a falsifiable prediction about the property of interest.
+          Atoms and beads both pass that test all the time. Loyalty to either one, at all times,
+          for all questions, does not.
+        </p>
+
+        <nav class="article-nav" aria-label="More posts">
+          <a href="post-template.html">← Previous: Welcome — and how this blog works</a>
+          <a href="ev-hype-and-electrolytes.html">Next: The EV hype and the electrolyte bottleneck →</a>
+        </nav>
+
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
