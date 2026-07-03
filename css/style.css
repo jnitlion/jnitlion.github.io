@@ -225,6 +225,7 @@ a:hover { color: var(--accent-hover); }
   width: 15rem;
   height: 15rem;
   object-fit: cover;
+  object-position: center 15%;  /* keep the face in frame on the square crop */
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(18, 60, 58, 0.25);
 }
