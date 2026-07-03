@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maxwell's Demon — The Game — Jes Itliong</title>
+  <meta name="description" content="Play Maxwell's Demon: control the gate, sort hot from cold molecules, and try to beat the Second Law of Thermodynamics. A browser game by a physicist.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .game-wrap { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem; }
+    #game-holder {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      touch-action: none;          /* hold-to-open on touch without scrolling */
+      user-select: none;
+    }
+    #game-canvas { display: block; width: 100%; }
+    .game-hud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      align-items: center;
+      margin: 0.9rem 0 0.4rem;
+      font-size: 0.9rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .hud-chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+    }
+    .hud-chip b { color: var(--ink); }
+    .hud-cold b { color: #1e5c58; }
+    .hud-hot b { color: #b45309; }
+    .entropy-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.4rem 0 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .entropy-track {
+      flex: 1;
+      height: 10px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    #entropy-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #1e5c58, #b45309);
+      transition: width 0.2s linear;
+    }
+    .game-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .game-controls button {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--ink-soft);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--ink);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .game-controls button:hover { background: var(--ink); color: #fff; }
+    .game-controls button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .game-controls button.primary:hover { background: var(--accent-hover); }
+    .game-controls button[aria-pressed="true"] {
+      background: var(--ink); color: #fff;
+    }
+    #game-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      text-align: center;
+      background: rgba(250, 246, 239, 0.92);
+      padding: 1.5rem;
+    }
+    #game-overlay h2 { margin: 0; font-size: 1.5rem; }
+    #game-overlay p { margin: 0; max-width: 30rem; }
+    #game-overlay .big { font-size: 2.2rem; font-weight: 700; color: var(--accent); font-family: var(--font-head); }
+    .game-about { max-width: 46rem; margin: 2.5rem auto 0; }
+    .game-about h2 { font-size: 1.4rem; margin: 2rem 0 0.75rem; }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-brand">Jes Itliong</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#research">Research</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#publications">Publications</a></li>
+        <li><a href="../index.html#teaching">Teaching</a></li>
+        <li><a href="../index.html#cv">CV</a></li>
+        <li><a href="../index.html#news">News</a></li>
+        <li><a href="../index.html#blog">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="article">
+      <div class="game-wrap">
+
+        <p class="article-breadcrumb"><a href="../index.html#projects">← Back to Projects</a></p>
+
+        <header class="article-header">
+          <p class="card-tag">Game</p>
+          <h1>Maxwell's Demon</h1>
+          <p class="article-meta">
+            You are the demon. <strong>Hold anywhere (or press SPACE)</strong> to open the gate.
+            Let <span style="color:#b45309;font-weight:600">hot molecules</span> into the right
+            chamber and keep <span style="color:#1e5c58;font-weight:600">cold ones</span> on the
+            left. Sort the gas before time runs out — and watch the entropy meter defy the
+            Second Law.
+          </p>
+        </header>
+
+        <div class="game-controls">
+          <span style="font-size:0.85rem;color:var(--text-muted)">Difficulty:</span>
+          <button type="button" class="diff-btn" data-diff="apprentice">Apprentice</button>
+          <button type="button" class="diff-btn" data-diff="demon" aria-pressed="true">Demon</button>
+          <button type="button" class="diff-btn" data-diff="laplace">Laplace</button>
+          <button type="button" id="btn-start" class="primary">Start</button>
+        </div>
+
+        <div id="game-holder">
+          <canvas id="game-canvas"></canvas>
+          <div id="game-overlay">
+            <h2>Maxwell's Demon</h2>
+            <p>A box of gas, half hot, half cold, all mixed up. Maxwell imagined a tiny demon
+               who could sort them without doing work — breaking thermodynamics. Time to try
+               it yourself.</p>
+            <p><strong>Hold</strong> mouse / touch / SPACE to open the gate. Release to close.
+               Hot → right. Cold → left.</p>
+            <p id="overlay-score"></p>
+          </div>
+        </div>
+
+        <div class="game-hud" aria-live="off">
+          <span class="hud-chip">⏱ <b id="hud-time">60.0</b> s</span>
+          <span class="hud-chip hud-cold">Left T: <b id="hud-tl">–</b></span>
+          <span class="hud-chip hud-hot">Right T: <b id="hud-tr">–</b></span>
+          <span class="hud-chip">ΔT: <b id="hud-dt">–</b></span>
+          <span class="hud-chip">Sorted: <b id="hud-sort">–</b></span>
+          <span class="hud-chip">Best: <b id="hud-best">–</b></span>
+        </div>
+        <div class="entropy-row">
+          <span>mixing entropy</span>
+          <div class="entropy-track"><div id="entropy-fill"></div></div>
+          <span id="entropy-label">100%</span>
+        </div>
+
+        <div class="game-about">
+          <h2>The thought experiment you're playing</h2>
+          <p>
+            In 1867, James Clerk Maxwell imagined a "very observant and neat-fingered being"
+            guarding a tiny door between two chambers of gas. By letting only fast molecules
+            pass one way and slow ones the other, the demon could make one side hot and the
+            other cold <em>without doing any work</em> — seemingly violating the
+            <a href="https://en.wikipedia.org/wiki/Second_law_of_thermodynamics" rel="noopener">Second
+            Law of Thermodynamics</a>, the rule that entropy never decreases in an isolated system.
+            The puzzle bothered physicists for over a century.
+          </p>
+          <p>
+            The modern resolution is one of the most beautiful ideas in physics: <strong>information
+            is physical</strong>. To sort molecules, the demon must <em>measure</em> them and
+            <em>remember</em> the results — and erasing that memory has an unavoidable
+            thermodynamic cost
+            (<a href="https://en.wikipedia.org/wiki/Landauer%27s_principle" rel="noopener">Landauer's
+            principle</a>: at least k<sub>B</sub>T&nbsp;ln&nbsp;2 of heat per bit). Add up the
+            demon's bookkeeping and the Second Law survives, every time. Your brain, watching
+            particles and timing the gate, is paying that entropy bill right now — the sorting
+            you achieve in the box is more than paid for by the physics of you achieving it.
+          </p>
+
+          <h2>What this game simplifies</h2>
+          <p>
+            The gas here is ideal: molecules fly ballistically, bounce elastically off the walls,
+            and don't collide with each other — which is why each molecule keeps its speed, and
+            "hot" and "cold" are permanent labels rather than a distribution that re-thermalizes.
+            Real gases would re-mix their velocities through collisions, making the demon's job
+            harder still. Temperatures shown are in reduced units (mean kinetic energy per
+            molecule per chamber), and the entropy meter tracks mixing entropy only — the
+            demon's own measurement costs are, mercifully for your score, not billed.
+          </p>
+          <p>
+            Built with plain JavaScript and a &lt;canvas&gt; — no frameworks, no build step,
+            physics loop readable in this page's source. Companion piece to the
+            <a href="stockmayer-simulator.html">Stockmayer fluid simulator</a>.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 Jester N. Itliong · Built with plain HTML &amp; CSS · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* ---------- config ---------- */
+    var DIFFS = {
+      apprentice: { n: 40, gateFrac: 0.30, time: 75 },
+      demon:      { n: 60, gateFrac: 0.22, time: 60 },
+      laplace:    { n: 90, gateFrac: 0.15, time: 45 },
+    };
+    var COLD = "#1e5c58", HOT = "#b45309", INK = "#123c3a", BG = "#fffdf9";
+    var R = 5;                     // particle radius (css px)
+    var WALL_HALF = 4;             // wall half-thickness
+    var SPEED_BASE = 90;           // cold speed scale (px/s)
+    var SPEED_HOT = 2.1;           // hot/cold speed ratio
+
+    /* ---------- state ---------- */
+    var canvas = document.getElementById("game-canvas");
+    var ctx = canvas.getContext("2d");
+    var holder = document.getElementById("game-holder");
+    var overlay = document.getElementById("game-overlay");
+    var diff = "demon";
+    var W = 0, H = 0, DPR = 1;
+    var parts = [];                // {x,y,vx,vy,hot}
+    var gateTarget = 0, gateFrac = 0;   // 0 closed .. 1 open
+    var timeLeft = 0, running = false, lastT = 0;
+
+    function resize() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = holder.clientWidth;
+      H = Math.max(300, Math.round(W * 0.55));
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
+      canvas.style.height = H + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      draw();
+    }
+    window.addEventListener("resize", resize);
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    function init() {
+      var cfg = DIFFS[diff];
+      parts = [];
+      for (var i = 0; i < cfg.n; i++) {
+        var hot = i < cfg.n / 2;
+        var speed = SPEED_BASE * (hot ? SPEED_HOT : 1) * rand(0.85, 1.15);
+        var ang = rand(0, Math.PI * 2);
+        parts.push({
+          x: rand(R + 2, W - R - 2),
+          y: rand(R + 2, H - R - 2),
+          vx: speed * Math.cos(ang),
+          vy: speed * Math.sin(ang),
+          hot: hot,
+        });
+      }
+      timeLeft = cfg.time;
+      gateTarget = 0; gateFrac = 0;
+    }
+
+    /* ---------- physics ---------- */
+    function step(dt) {
+      var mid = W / 2;
+      var gapH = DIFFS[diff].gateFrac * H;
+      var gapTop = (H - gapH) / 2, gapBot = (H + gapH) / 2;
+      var open = gateFrac > 0.55;
+
+      gateFrac += (gateTarget - gateFrac) * Math.min(1, dt * 10);
+
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        var nx = p.x + p.vx * dt;
+        var ny = p.y + p.vy * dt;
+
+        // outer walls
+        if (nx < R) { nx = R; p.vx = Math.abs(p.vx); }
+        if (nx > W - R) { nx = W - R; p.vx = -Math.abs(p.vx); }
+        if (ny < R) { ny = R; p.vy = Math.abs(p.vy); }
+        if (ny > H - R) { ny = H - R; p.vy = -Math.abs(p.vy); }
+
+        // center wall + gate
+        var wasLeft = p.x < mid;
+        var nearWall = Math.abs(nx - mid) < WALL_HALF + R;
+        if (nearWall) {
+          var inGap = ny > gapTop + R && ny < gapBot - R;
+          if (!(open && inGap)) {
+            // bounce back to own side
+            p.vx = wasLeft ? -Math.abs(p.vx) : Math.abs(p.vx);
+            nx = wasLeft ? mid - WALL_HALF - R : mid + WALL_HALF + R;
+          }
+        }
+        p.x = nx; p.y = ny;
+      }
+    }
+
+    /* ---------- measurements ---------- */
+    function measure() {
+      var mid = W / 2;
+      var sum = { l: 0, r: 0 }, cnt = { l: 0, r: 0 };
+      var hotR = 0, coldL = 0, hl = 0, hr = 0;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        var side = p.x < mid ? "l" : "r";
+        cnt[side]++;
+        sum[side] += (p.vx * p.vx + p.vy * p.vy);
+        if (side === "r") { if (p.hot) { hotR++; hr++; } }
+        else { if (!p.hot) coldL++; else hl++; }
+      }
+      // reduced temperature ~ mean v^2 (scaled to O(1))
+      var scale = 2 * SPEED_BASE * SPEED_BASE;
+      var tl = cnt.l ? sum.l / cnt.l / scale : 0;
+      var tr = cnt.r ? sum.r / cnt.r / scale : 0;
+      var sorted = (hotR + coldL) / parts.length;
+      // mixing entropy: mean binary entropy of hot-fraction per chamber (1 = mixed, 0 = sorted)
+      function hbin(p_) {
+        if (p_ <= 0 || p_ >= 1) return 0;
+        return -(p_ * Math.log(p_) + (1 - p_) * Math.log(1 - p_)) / Math.LN2;
+      }
+      var S = 0;
+      if (cnt.l) S += (cnt.l / parts.length) * hbin(hl / cnt.l);
+      if (cnt.r) S += (cnt.r / parts.length) * hbin(hr / cnt.r);
+      return { tl: tl, tr: tr, sorted: sorted, S: S };
+    }
+
+    /* ---------- drawing ---------- */
+    function draw() {
+      ctx.fillStyle = BG;
+      ctx.fillRect(0, 0, W, H);
+
+      var mid = W / 2;
+      var gapH = DIFFS[diff].gateFrac * H;
+      var gapTop = (H - gapH) / 2, gapBot = (H + gapH) / 2;
+
+      // chamber tint
+      ctx.fillStyle = "rgba(30, 92, 88, 0.05)";
+      ctx.fillRect(0, 0, mid, H);
+      ctx.fillStyle = "rgba(180, 83, 9, 0.05)";
+      ctx.fillRect(mid, 0, mid, H);
+
+      // wall
+      ctx.fillStyle = INK;
+      ctx.fillRect(mid - WALL_HALF, 0, WALL_HALF * 2, gapTop);
+      ctx.fillRect(mid - WALL_HALF, gapBot, WALL_HALF * 2, H - gapBot);
+      // gate doors (slide apart as gateFrac -> 1)
+      var doorH = (gapH / 2) * (1 - gateFrac);
+      ctx.fillStyle = gateFrac > 0.55 ? "#d97706" : INK;
+      ctx.fillRect(mid - WALL_HALF, gapTop, WALL_HALF * 2, doorH);
+      ctx.fillRect(mid - WALL_HALF, gapBot - doorH, WALL_HALF * 2, doorH);
+
+      // particles
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, R, 0, Math.PI * 2);
+        ctx.fillStyle = p.hot ? HOT : COLD;
+        ctx.fill();
+      }
+
+      // side labels
+      ctx.font = "600 12px Inter, sans-serif";
+      ctx.fillStyle = "rgba(30,92,88,0.45)";
+      ctx.fillText("COLD SIDE", 12, 20);
+      ctx.fillStyle = "rgba(180,83,9,0.45)";
+      var tw = ctx.measureText("HOT SIDE").width;
+      ctx.fillText("HOT SIDE", W - tw - 12, 20);
+    }
+
+    /* ---------- HUD ---------- */
+    var $ = function (id) { return document.getElementById(id); };
+    function hud() {
+      var m = measure();
+      $("hud-time").textContent = Math.max(0, timeLeft).toFixed(1);
+      $("hud-tl").textContent = m.tl.toFixed(2);
+      $("hud-tr").textContent = m.tr.toFixed(2);
+      $("hud-dt").textContent = (m.tr - m.tl).toFixed(2);
+      $("hud-sort").textContent = Math.round(m.sorted * 100) + "%";
+      $("entropy-fill").style.width = (m.S * 100).toFixed(0) + "%";
+      $("entropy-label").textContent = (m.S * 100).toFixed(0) + "%";
+      return m;
+    }
+
+    function bestKey() { return "maxdemon-best-" + diff; }
+    function showBest() {
+      var b = localStorage.getItem(bestKey());
+      $("hud-best").textContent = b ? b + "%" : "–";
+    }
+
+    /* ---------- game flow ---------- */
+    function start() {
+      init();
+      overlay.style.display = "none";
+      running = true;
+      lastT = performance.now();
+      $("btn-start").textContent = "Restart";
+      showBest();
+    }
+
+    function finish() {
+      running = false;
+      gateTarget = 0;
+      var m = hud();
+      var pct = Math.round(m.sorted * 100);
+      var best = parseInt(localStorage.getItem(bestKey()) || "0", 10);
+      var isRecord = pct > best;
+      if (isRecord) localStorage.setItem(bestKey(), String(pct));
+      showBest();
+      overlay.querySelector("h2").textContent = isRecord ? "New record!" : "Time's up!";
+      overlay.querySelectorAll("p")[0].innerHTML =
+        "You sorted <b>" + pct + "%</b> of the gas and built a temperature difference of ΔT = <b>" +
+        (m.tr - m.tl).toFixed(2) + "</b>.";
+      overlay.querySelectorAll("p")[1].innerHTML =
+        m.S < 0.5 ? "The Second Law would like a word about your memory bank."
+                  : "The Second Law remains comfortably undefeated.";
+      $("overlay-score").innerHTML = '<span class="big">' + pct + "%</span>";
+      overlay.style.display = "flex";
+    }
+
+    function loop(t) {
+      requestAnimationFrame(loop);
+      if (!running) return;
+      var dt = Math.min(0.033, (t - lastT) / 1000);
+      lastT = t;
+      timeLeft -= dt;
+      step(dt);
+      draw();
+      hud();
+      if (timeLeft <= 0) finish();
+    }
+
+    /* ---------- input ---------- */
+    function gate(openIt) { if (running) gateTarget = openIt ? 1 : 0; }
+    holder.addEventListener("pointerdown", function (e) { e.preventDefault(); gate(true); });
+    window.addEventListener("pointerup", function () { gate(false); });
+    window.addEventListener("keydown", function (e) {
+      if (e.code === "Space") { e.preventDefault(); gate(true); }
+    });
+    window.addEventListener("keyup", function (e) {
+      if (e.code === "Space") gate(false);
+    });
+    document.addEventListener("visibilitychange", function () {
+      lastT = performance.now();   // avoid dt jump after tab switch
+    });
+
+    var diffBtns = document.querySelectorAll(".diff-btn");
+    diffBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        diff = b.dataset.diff;
+        diffBtns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        showBest();
+        if (running) start();      // restart on new difficulty
+      });
+    });
+    $("btn-start").addEventListener("click", start);
+
+    /* ---------- boot ---------- */
+    resize();
+    init();
+    draw();
+    showBest();
+    requestAnimationFrame(loop);
+
+    // deterministic driver for automated testing (harmless in normal play)
+    window.__demonTest = {
+      start: start,
+      gate: gate,
+      tick: function (seconds) {
+        var stepsN = Math.round(seconds / 0.016);
+        for (var i = 0; i < stepsN; i++) {
+          step(0.016);
+          if (running) timeLeft -= 0.016;
+        }
+        draw();
+        return hud();
+      },
+      counts: function () {
+        var mid = W / 2, l = 0;
+        parts.forEach(function (p) { if (p.x < mid) l++; });
+        return { left: l, right: parts.length - l, gateFrac: gateFrac, running: running, timeLeft: timeLeft };
+      },
+    };
+  })();
+  </script>
+</body>
+</html>
