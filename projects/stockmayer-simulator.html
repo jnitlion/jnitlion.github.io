@@ -261,12 +261,12 @@
           <h2>What this demo simplifies</h2>
           <p>
             This is a teaching demonstration, not a research instrument. To run in real time it
-            uses a small system (periodic boundaries), truncated dipole–dipole interactions
+            uses a small system (periodic boundaries), truncated dipole-dipole interactions
             instead of Ewald summation, Berendsen-style thermostat and barostat, and gentle
             force caps for numerical stability. My research simulations use LAMMPS with
             long-range electrostatics, rigorous ensembles, and thousands of particles. Still,
             the qualitative physics you see here (dipolar chaining, glassy slowdown,
-            pressure–density coupling) is the real thing.
+            pressure-density coupling) is the real thing.
           </p>
           <p>
             Built with plain JavaScript and <a href="https://threejs.org" rel="noopener">Three.js</a>;
@@ -303,7 +303,7 @@
        Reduced units: m = 1, k_B = 1. Velocity Verlet for translation,
        explicit rotation of unit dipole vectors driven by pair torques.
        Berendsen thermostat (translational + rotational) and optional
-       Berendsen barostat. O(N^2) pair loop with cutoff — fine for the
+       Berendsen barostat. O(N^2) pair loop with cutoff, fine for the
        small N used here. */
 
     const P = {                 // live parameters (bound to sliders)
@@ -325,7 +325,7 @@
     let dir, omg, trq;          // dipole directions, angular velocities, torques (3N)
     let measT = 0, measP = 0;
 
-    function gauss() {          // Box–Muller
+    function gauss() {          // Box-Muller
       let u = 0, v = 0;
       while (u === 0) u = Math.random();
       while (v === 0) v = Math.random();
