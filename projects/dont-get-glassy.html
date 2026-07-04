@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Don't Get Glassy — The Game — Jes Itliong</title>
-  <meta name="description" content="Survive the quench: a browser game about the glass transition. Your liquid is being cooled toward vitrification — fight the spreading frost with a limited heat gun.">
+  <meta name="description" content="Survive the quench: a browser game about the glass transition. Your liquid is being cooled toward vitrification, so fight the spreading frost with a limited heat gun.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
@@ -135,7 +135,7 @@
           <p class="article-meta">
             Your liquid is being quenched toward the glass transition. Frozen regions turn
             <span style="color:#8fb3ae;font-weight:600">frosty</span> and spread.
-            <strong>Hold anywhere</strong> to fire the heat gun and melt them — but heat is
+            <strong>Hold anywhere</strong> to fire the heat gun and melt them, but heat is
             limited and the cooling never stops. Survive as long as you can.
           </p>
         </header>
@@ -152,9 +152,9 @@
           <canvas id="game-canvas"></canvas>
           <div id="game-overlay">
             <h2>Don't Get Glassy</h2>
-            <p>A liquid that cools too fast to crystallize doesn't freeze — it <em>vitrifies</em>:
-               molecules slow down until they're trapped mid-disorder. That's the glass
-               transition, and tonight it's coming for your simulation box.</p>
+            <p>A liquid that cools too fast to crystallize doesn't freeze. Instead it
+               <em>vitrifies</em>: molecules slow down until they're trapped mid-disorder.
+               That's the glass transition, and tonight it's coming for your simulation box.</p>
             <p><strong>Hold</strong> mouse / touch to heat the region under your cursor.
                Keep the liquid liquid. When ~85% freezes, it's over.</p>
             <p id="overlay-score"></p>
@@ -180,36 +180,36 @@
           <h2>The physics you're fighting</h2>
           <p>
             Cool a liquid slowly and it usually crystallizes: molecules find their ordered,
-            low-energy arrangement. Cool it fast enough and they don't get the chance — the
+            low-energy arrangement. Cool it fast enough and they don't get the chance. The
             liquid's own sluggishness outruns its search for order, relaxation times explode
             from picoseconds toward centuries, and the material solidifies while still
             structurally a liquid. That kinetic arrest is the <strong>glass transition</strong>,
             and the temperature where viscosity reaches a staggering 10<sup>12</sup> Pa·s is
             called T<sub>g</sub>. It's one of the deepest unsolved problems in condensed matter
-            physics — and the central character of
+            physics, and it's the central character of
             <a href="../research/stockmayer-ean.html">my dissertation</a>, where we extract
             T<sub>g</sub> from simulated viscosity curves of ionic liquids.
           </p>
           <p>
             Two honest details are baked into the game. First, the particles come in two sizes:
             a one-size liquid in 2D crystallizes almost instantly on cooling, so simulators use
-            <em>bidisperse mixtures</em> to frustrate crystallization — the same trick used in
+            <em>bidisperse mixtures</em> to frustrate crystallization, the same trick used in
             real glass-transition research. Second, your inevitable defeat is physically
-            faithful: at fixed density, with the thermostat marching downward, vitrification
-            isn't a puzzle you can solve — only postpone. The game's real question is the same
-            one my research asks: <em>what controls how long you can keep a cooling liquid
-            mobile?</em>
+            faithful. At fixed density, with the thermostat marching downward, vitrification
+            isn't a puzzle you can solve, only one you can postpone. The game's real question is
+            the same one my research asks: <em>what controls how long you can keep a cooling
+            liquid mobile?</em>
           </p>
 
           <h2>What this game simplifies</h2>
           <p>
-            The "molecules" are soft repulsive disks with Langevin dynamics — no attractions,
+            The "molecules" are soft repulsive disks with Langevin dynamics: no attractions,
             no chemistry, and a local "frozen" label based on each particle's recent mobility
             rather than a proper relaxation-function analysis. Your heat gun is a cheerful
             fiction (real experimentalists cannot locally reheat a quenching melt with a
             crosshair, much as they might wish to). And the cooling rates here are, by
-            molecular standards, apocalyptic. For the real thing — VFT fits, fragility, and
-            T<sub>g</sub> from transport — see the
+            molecular standards, apocalyptic. For the real thing, with VFT fits, fragility, and
+            T<sub>g</sub> from transport, see the
             <a href="../index.html#research">research section</a>.
           </p>
           <p>
@@ -436,7 +436,7 @@
       var record = t > best;
       if (record) localStorage.setItem(bestKey(), t.toFixed(1));
       showBest();
-      overlay.querySelector("h2").textContent = record ? "New record — still glassy though" : "Vitrified!";
+      overlay.querySelector("h2").textContent = record ? "New record, still glassy though" : "Vitrified!";
       overlay.querySelectorAll("p")[0].innerHTML =
         "Your liquid survived <b>" + t.toFixed(1) + " s</b> of " +
         DIFFS[diff].label.toLowerCase() + " before the glass won.";

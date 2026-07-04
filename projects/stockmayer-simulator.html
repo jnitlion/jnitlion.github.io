@@ -167,7 +167,7 @@
           <p class="card-tag">Interactive demo</p>
           <h1>3D Stockmayer Fluid Simulator</h1>
           <p class="article-meta">
-            A live molecular dynamics simulation of Lennard-Jones spheres carrying point dipoles —
+            A live molecular dynamics simulation of Lennard-Jones spheres carrying point dipoles,
             the coarse-grained model behind my dissertation. Drag to rotate, scroll to zoom.
           </p>
         </header>
@@ -244,7 +244,7 @@
             Each sphere is a coarse-grained ion: a Lennard-Jones bead (size σ, attraction
             strength ε) carrying a point dipole (moment μ, drawn as an arrow). This
             <strong>Stockmayer fluid</strong> is the minimal model my research uses to ask
-            which molecular properties control the viscosity of ionic liquids — the same
+            which molecular properties control the viscosity of ionic liquids. It is the same
             framework that <a href="../research/stockmayer-ean.html">quantitatively reproduces
             the viscosity of ethylammonium nitrate</a>. All quantities are in reduced
             (dimensionless) units, the standard convention in molecular simulation.
@@ -252,10 +252,10 @@
 
           <h2>Things to try</h2>
           <ul>
-            <li><strong>Crank μ up to 2+</strong> — dipoles attract head-to-tail, and you'll see particles line up into chains and rings. This self-association is a key reason polar liquids are viscous.</li>
-            <li><strong>Drop the temperature below ~0.3</strong> — motion becomes sluggish and structure freezes in, a glimpse of glassy dynamics.</li>
-            <li><strong>Turn on NPT and raise the pressure</strong> — the box compresses until the fluid pushes back. Lower it and the system expands toward a gas.</li>
-            <li><strong>Set μ = 0</strong> — you recover a plain Lennard-Jones fluid; compare how much livelier it is at the same temperature.</li>
+            <li><strong>Crank μ up to 2+.</strong> Dipoles attract head-to-tail, and you'll see particles line up into chains and rings. This self-association is a key reason polar liquids are viscous.</li>
+            <li><strong>Drop the temperature below ~0.3.</strong> Motion becomes sluggish and structure freezes in, a glimpse of glassy dynamics.</li>
+            <li><strong>Turn on NPT and raise the pressure.</strong> The box compresses until the fluid pushes back. Lower it and the system expands toward a gas.</li>
+            <li><strong>Set μ = 0.</strong> You recover a plain Lennard-Jones fluid; compare how much livelier it is at the same temperature.</li>
           </ul>
 
           <h2>What this demo simplifies</h2>
@@ -264,8 +264,8 @@
             uses a small system (periodic boundaries), truncated dipole–dipole interactions
             instead of Ewald summation, Berendsen-style thermostat and barostat, and gentle
             force caps for numerical stability. My research simulations use LAMMPS with
-            long-range electrostatics, rigorous ensembles, and thousands of particles — but the
-            qualitative physics you see here (dipolar chaining, glassy slowdown,
+            long-range electrostatics, rigorous ensembles, and thousands of particles. Still,
+            the qualitative physics you see here (dipolar chaining, glassy slowdown,
             pressure–density coupling) is the real thing.
           </p>
           <p>

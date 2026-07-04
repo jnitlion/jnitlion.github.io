@@ -143,7 +143,7 @@
             You are the demon. <strong>Hold anywhere (or press SPACE)</strong> to open the gate.
             Let <span style="color:#b45309;font-weight:600">hot molecules</span> into the right
             chamber and keep <span style="color:#1e5c58;font-weight:600">cold ones</span> on the
-            left. Sort the gas before time runs out — and watch the entropy meter defy the
+            left. Sort the gas before time runs out and watch the entropy meter defy the
             Second Law.
           </p>
         </header>
@@ -161,8 +161,8 @@
           <div id="game-overlay">
             <h2>Maxwell's Demon</h2>
             <p>A box of gas, half hot, half cold, all mixed up. Maxwell imagined a tiny demon
-               who could sort them without doing work — breaking thermodynamics. Time to try
-               it yourself.</p>
+               who could sort them without doing work, breaking thermodynamics in the process.
+               Time to try it yourself.</p>
             <p><strong>Hold</strong> mouse / touch / SPACE to open the gate. Release to close.
                Hot → right. Cold → left.</p>
             <p id="overlay-score"></p>
@@ -189,7 +189,7 @@
             In 1867, James Clerk Maxwell imagined a "very observant and neat-fingered being"
             guarding a tiny door between two chambers of gas. By letting only fast molecules
             pass one way and slow ones the other, the demon could make one side hot and the
-            other cold <em>without doing any work</em> — seemingly violating the
+            other cold <em>without doing any work</em>, seemingly violating the
             <a href="https://en.wikipedia.org/wiki/Second_law_of_thermodynamics" rel="noopener">Second
             Law of Thermodynamics</a>, the rule that entropy never decreases in an isolated system.
             The puzzle bothered physicists for over a century.
@@ -197,28 +197,28 @@
           <p>
             The modern resolution is one of the most beautiful ideas in physics: <strong>information
             is physical</strong>. To sort molecules, the demon must <em>measure</em> them and
-            <em>remember</em> the results — and erasing that memory has an unavoidable
+            <em>remember</em> the results, and erasing that memory has an unavoidable
             thermodynamic cost
             (<a href="https://en.wikipedia.org/wiki/Landauer%27s_principle" rel="noopener">Landauer's
             principle</a>: at least k<sub>B</sub>T&nbsp;ln&nbsp;2 of heat per bit). Add up the
             demon's bookkeeping and the Second Law survives, every time. Your brain, watching
-            particles and timing the gate, is paying that entropy bill right now — the sorting
+            particles and timing the gate, is paying that entropy bill right now. The sorting
             you achieve in the box is more than paid for by the physics of you achieving it.
           </p>
 
           <h2>What this game simplifies</h2>
           <p>
             The gas here is ideal: molecules fly ballistically, bounce elastically off the walls,
-            and don't collide with each other — which is why each molecule keeps its speed, and
+            and don't collide with each other. This is why each molecule keeps its speed, and why
             "hot" and "cold" are permanent labels rather than a distribution that re-thermalizes.
             Real gases would re-mix their velocities through collisions, making the demon's job
             harder still. Temperatures shown are in reduced units (mean kinetic energy per
-            molecule per chamber), and the entropy meter tracks mixing entropy only — the
+            molecule per chamber), and the entropy meter tracks mixing entropy only. The
             demon's own measurement costs are, mercifully for your score, not billed.
           </p>
           <p>
-            Built with plain JavaScript and a &lt;canvas&gt; — no frameworks, no build step,
-            physics loop readable in this page's source. Companion piece to the
+            Built with plain JavaScript and a &lt;canvas&gt;: no frameworks, no build step,
+            and a physics loop you can read in this page's source. Companion piece to the
             <a href="stockmayer-simulator.html">Stockmayer fluid simulator</a>.
           </p>
         </div>

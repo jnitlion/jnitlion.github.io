@@ -60,36 +60,37 @@
 
         <h2>The idea</h2>
         <p>
-          Ionic liquids are salts that are molten at room temperature — attractive as safer
-          electrolytes and green solvents, but often too viscous to be practical. Atomistic
-          simulations can predict their viscosity, but they are expensive and tied to one
-          specific chemistry at a time. The question behind this project: how much chemical
-          detail do you actually need to capture the viscosity of a real ionic liquid?
+          Ionic liquids are salts that are molten at room temperature. They are attractive as
+          safer electrolytes and green solvents, but many of them are too viscous to be
+          practical. Atomistic simulations can predict their viscosity, but they are expensive
+          and tied to one specific chemistry at a time. This project asks a simple question:
+          how much chemical detail do we actually need to capture the viscosity of a real
+          ionic liquid?
         </p>
         <p>
-          We tested the most minimal candidate — the Stockmayer fluid, spheres carrying a
-          point charge and a point dipole — against ethylammonium nitrate (EAN), one of the
-          oldest and best-characterized protic ionic liquids.
+          We tested the most minimal candidate, the Stockmayer fluid, in which each ion is a
+          sphere carrying a point charge and a point dipole. Our benchmark was ethylammonium
+          nitrate (EAN), one of the oldest and best-characterized protic ionic liquids.
         </p>
 
         <figure class="figure-slot">
           <div class="figure-placeholder" role="img" aria-label="Placeholder for a schematic of the coarse-grained Stockmayer model of EAN">
-            <span>Figure slot — e.g., schematic of the coarse-grained EAN model (spheres with charge and dipole)</span>
+            <span>Figure slot: schematic of the coarse-grained EAN model (spheres with charge and dipole)</span>
           </div>
           <figcaption>Coarse-grained representation of EAN as a Stockmayer fluid. <em>(Replace with your figure and caption.)</em></figcaption>
         </figure>
 
         <h2>What we did</h2>
         <p>
-          We parameterized the model against EAN's molecular properties — cation diameter
-          σ⁺ = 4.80 Å, reduced charge q = +0.35e, and dipole moment μ = 5.17 D — and ran
+          We parameterized the model against EAN's molecular properties (cation diameter
+          σ⁺ = 4.80 Å, reduced charge q = +0.35e, and dipole moment μ = 5.17 D) and ran
           equilibrium molecular dynamics in LAMMPS, computing viscosity with Green–Kubo
           stress-autocorrelation methods across a wide temperature range.
         </p>
 
         <figure class="figure-slot">
           <div class="figure-placeholder" role="img" aria-label="Placeholder for a plot of simulated versus experimental viscosity of EAN as a function of temperature">
-            <span>Figure slot — e.g., viscosity vs. temperature: simulation vs. experiment</span>
+            <span>Figure slot: viscosity vs. temperature, simulation against experiment</span>
           </div>
           <figcaption>Simulated viscosity of the Stockmayer EAN model compared with experimental data. <em>(Replace with your figure and caption.)</em></figcaption>
         </figure>
@@ -97,9 +98,9 @@
         <h2>What we found</h2>
         <p>
           The minimal dipolar model reproduces EAN's experimental viscosity and its
-          glass-transition behavior. That's a meaningful result: it says the transport
+          glass-transition behavior. This result tells us something meaningful: the transport
           physics of a real protic ionic liquid is controlled by a small set of molecular
-          parameters — size, charge, and dipole moment — rather than by chemical detail.
+          parameters (size, charge, and dipole moment) rather than by chemical detail.
           It also validates the Stockmayer framework as a fast, transferable platform for
           scanning ionic-liquid design space, which is exactly what the
           <a href="parameter-space.html">parameter-space study</a> does next.
@@ -107,9 +108,9 @@
 
         <figure class="figure-slot">
           <div class="figure-placeholder" role="img" aria-label="Placeholder for an additional figure, for example glass-transition analysis">
-            <span>Figure slot — e.g., glass-transition analysis or structure snapshot</span>
+            <span>Figure slot: glass-transition analysis or structure snapshot</span>
           </div>
-          <figcaption><em>(Optional third figure — delete this block if you don't need it.)</em></figcaption>
+          <figcaption><em>(Optional third figure. Delete this block if you don't need it.)</em></figcaption>
         </figure>
 
         <nav class="article-nav" aria-label="More research">

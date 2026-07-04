@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Atomistic vs. Coarse-Grained MD: A Long, Heated, Unnecessary Battle — Jes Itliong</title>
-  <meta name="description" content="Why the atomistic vs. coarse-grained argument in molecular dynamics never resolves — and why the right resolution was always determined by the question, not the tribe.">
+  <meta name="description" content="Why the atomistic vs. coarse-grained argument in molecular dynamics never really resolves, and why the right resolution was always set by the question, not the tribe.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
@@ -49,15 +49,15 @@
         </header>
 
         <p>
-          Every field has its tribal argument. Molecular dynamics has a durable one: should you
-          simulate matter <em>atomistically</em>, with every atom (sometimes every electron cloud's
-          ghost) accounted for — or <em>coarse-grained</em>, with groups of atoms lumped into beads
-          that keep only the physics you believe matters?
+          Every field has its tribal argument, and molecular dynamics has a durable one. Should you
+          simulate matter <em>atomistically</em>, keeping track of every atom (and sometimes every
+          electron cloud's ghost)? Or should you go <em>coarse-grained</em>, lumping groups of atoms
+          into beads that keep only the physics you believe matters?
         </p>
         <p>
-          Full disclosure: I have a horse in this race. My dissertation reduces entire ionic
-          liquids to spheres carrying a charge and a dipole. So take what follows as an insider's
-          attempt to be fair to both camps — including mine.
+          I should say up front that I have a horse in this race. My dissertation reduces entire
+          ionic liquids to spheres carrying a charge and a dipole. So read what follows as an
+          insider trying to be fair to both camps, mine included.
         </p>
 
         <figure class="figure-slot">
@@ -119,7 +119,7 @@
                   fill="#64716e" text-anchor="middle">2 beads (+ dipole) · 100× longer timescales</text>
           </svg>
           <figcaption>
-            Fig. 1 — The trade at the heart of the argument: an atomistic molecule (left) is mapped
+            Fig. 1. The trade at the heart of the argument: an atomistic molecule (left) is mapped
             to a few coarse-grained beads with effective interactions (right). Chemical identity is
             traded for reach in time and system size.
           </figcaption>
@@ -127,45 +127,47 @@
 
         <h2>The case for atoms</h2>
         <p>
-          The atomistic argument is easy to respect: <strong>chemistry is in the details.</strong>
-          Swap one anion for another, add a methyl group, move a charge — real materials respond to
-          these changes, and an all-atom force field can too. Atomistic MD offers quantitative
-          predictions for specific compounds, direct comparison against spectroscopy and scattering,
-          and no awkward questions about what a "bead" means. When it's parameterized well, it is the
-          closest thing simulation has to a virtual experiment.
+          The atomistic argument is easy to respect, because <strong>chemistry lives in the
+          details.</strong> Swap one anion for another, add a methyl group, move a charge, and a
+          real material responds to every one of those changes. A well-built all-atom force field
+          responds too. Atomistic MD gives you quantitative predictions for specific compounds,
+          direct comparison against spectroscopy and scattering, and no awkward questions about what
+          a "bead" is supposed to mean. Done well, it is the closest thing simulation has to a
+          virtual experiment.
         </p>
         <p>
-          The cost is brutal, though. Femtosecond time steps mean that a microsecond is a heroic
-          run. And the properties I care about — viscosity of an ionic liquid near its glass
-          transition, chain relaxation in a polymer melt — live at microseconds and beyond. The
-          all-atom simulation that can't reach the relaxation time doesn't give you a slightly
-          worse viscosity; it gives you <em>no viscosity at all</em>.
+          The cost, though, is brutal. Femtosecond time steps make a single microsecond a heroic
+          run, and the properties I care about live at microseconds and beyond: the viscosity of an
+          ionic liquid near its glass transition, or chain relaxation in a polymer melt. If an
+          all-atom simulation can't reach the relaxation time, it doesn't hand you a slightly worse
+          viscosity. It hands you <em>no viscosity at all</em>.
         </p>
 
         <h2>The case for beads</h2>
         <p>
-          The coarse-grained argument is just as principled: <strong>most microscopic detail is
-          irrelevant to macroscopic behavior.</strong> This isn't laziness — it's renormalization,
-          one of the deepest ideas in physics. Polymer scaling laws don't care about bond angles.
-          The glass transition doesn't care which force field version you used. If a property is
-          universal, a minimal model doesn't just approximate the physics — it <em>isolates</em> it.
+          The coarse-grained argument is just as principled. <strong>Most microscopic detail is
+          irrelevant to macroscopic behavior.</strong> That isn't laziness talking, it's
+          renormalization, one of the deepest ideas in physics. Polymer scaling laws don't care
+          about bond angles. The glass transition doesn't care which version of a force field you
+          used. When a property is universal, a minimal model doesn't just approximate the physics.
+          It <em>isolates</em> it.
         </p>
         <p>
-          In my own work, a Stockmayer fluid — spheres with a point charge and a point dipole —
+          In my own work, a Stockmayer fluid (spheres with a point charge and a point dipole)
           <a href="../research/stockmayer-ean.html">quantitatively reproduces the viscosity and
-          glass-transition behavior of ethylammonium nitrate</a>. Not "qualitatively captures
-          trends": reproduces experiment. And because the model has four knobs instead of four
-          hundred, we could then <a href="../research/parameter-space.html">turn each knob
-          independently</a> and map which molecular properties actually control viscosity — an
-          experiment no lab and no all-atom study could afford to run.
+          glass-transition behavior of ethylammonium nitrate</a>. Not "qualitatively captures the
+          trends," but actually reproduces the experiment. And because the model has four knobs
+          instead of four hundred, we could <a href="../research/parameter-space.html">turn each one
+          independently</a> and map which molecular properties really control viscosity. No lab and
+          no all-atom study could afford to run that experiment.
         </p>
         <p>
-          The costs are real here too. Coarse-graining buys speed partly through smoother energy
-          landscapes, which means dynamics are artificially fast and must be interpreted through
-          rescaling. Effective potentials fit at one state point may quietly fail at another — the
-          <em>transferability problem</em> — and by construction, a CG model cannot answer questions
-          about the details it integrated out. Ask my Stockmayer beads about hydrogen-bond network
-          topology, and they will stare back blankly.
+          The costs are real here too. Coarse-graining buys speed partly by smoothing the energy
+          landscape, so the dynamics come out artificially fast and have to be interpreted through
+          rescaling. Effective potentials fit at one state point can quietly fail at another, which
+          people call the <em>transferability problem</em>. And by construction, a coarse-grained
+          model can't answer questions about the details it threw away. Ask my Stockmayer beads
+          about hydrogen-bond network topology and they will stare back blankly.
         </p>
 
         <figure class="figure-slot">
@@ -216,8 +218,8 @@
               overlap region: validate CG against AA here</text>
           </svg>
           <figcaption>
-            Fig. 2 — Each method owns a patch of length–time space. The overlap regions are not
-            battlegrounds; they're calibration zones, where one resolution validates and
+            Fig. 2. Each method owns a patch of length and time space. The overlap regions are not
+            battlegrounds. They're calibration zones, where one resolution validates and
             parameterizes the next.
           </figcaption>
         </figure>
@@ -231,19 +233,19 @@
           reactions are human, and both are strawmen.
         </p>
         <p>
-          The atomistic camp's caricature — <em>"coarse-grained models are cartoons that can't
-          predict anything real"</em> — is answered by every CG study that survives quantitative
-          contact with experiment. The CG camp's caricature — <em>"atomistic detail is expensive
-          noise"</em> — is answered every time a property turns out to hinge on a hydrogen bond,
-          a specific ion pairing, a chemically distinct conformation. Neither caricature survives
-          contact with an actual research problem.
+          The atomistic camp's caricature says <em>"coarse-grained models are cartoons that can't
+          predict anything real,"</em> and it's answered by every CG study that survives quantitative
+          contact with experiment. The CG camp's caricature says <em>"atomistic detail is expensive
+          noise,"</em> and it's answered every time a property turns out to hinge on a single
+          hydrogen bond, a specific ion pairing, or one chemically distinct conformation. Neither
+          caricature survives contact with a real research problem.
         </p>
 
         <h2>The resolution: the question picks the resolution</h2>
         <p>
-          Here is the synthesis, and it's almost embarrassingly simple:
-          <strong>the choice of model is determined by the system and the property you're asking
-          about — not by loyalty.</strong>
+          Here is the synthesis, and it's almost embarrassingly simple.
+          <strong>The choice of model is set by the system and the property you're asking about,
+          not by loyalty.</strong>
         </p>
         <ul>
           <li>
@@ -258,23 +260,23 @@
             coarse-grained.
           </li>
           <li>
-            Want both? Use both — deliberately. Parameterize beads from atomistic runs, validate
-            in the overlap window (Fig. 2), push the CG model into territory atoms can't reach,
-            and back-map when you need detail restored.
+            Want both? Use both, deliberately. Parameterize your beads from atomistic runs, validate
+            in the overlap window (Fig. 2), push the CG model into territory atoms can't reach, and
+            back-map when you need the detail restored.
           </li>
         </ul>
         <p>
-          My own workflow is exactly this armistice. Molecular parameters come from the real
-          compound. The Stockmayer model earns trust by reproducing experimental viscosity where
-          data exists. Only then does it get used where neither experiment nor atomistic simulation
-          can go. The two resolutions aren't rivals in that pipeline — they're stages.
+          My own workflow is exactly this armistice. The molecular parameters come from the real
+          compound. The Stockmayer model earns trust by reproducing experimental viscosity wherever
+          data exists. Only then do I use it where neither experiment nor atomistic simulation can
+          go. In that pipeline the two resolutions aren't rivals. They're stages.
         </p>
         <p>
-          The "battle," in the end, is a category error: it treats a modeling decision as an
-          identity. The sharper question — the one worth being tribal about — is whether the model,
-          at whatever resolution, makes a falsifiable prediction about the property of interest.
-          Atoms and beads both pass that test all the time. Loyalty to either one, at all times,
-          for all questions, does not.
+          The "battle," in the end, is a category error. It treats a modeling decision as an
+          identity. The sharper question, and the one actually worth being tribal about, is whether
+          the model at whatever resolution makes a falsifiable prediction about the property you
+          care about. Atoms and beads both pass that test all the time. Loyalty to either one, at all
+          times and for all questions, does not.
         </p>
 
         <nav class="article-nav" aria-label="More posts">
