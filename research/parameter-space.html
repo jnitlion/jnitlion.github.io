@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Viscosity Across Ionic-Liquid Parameter Space — Jes Itliong</title>
-  <meta name="description" content="A systematic molecular dynamics study of how charge, dipole moment and mobility, ion size, and chain length govern the viscosity of ionic liquids.">
+  <meta name="description" content="A systematic molecular dynamics study of how charge, dipole moment, and ion size govern viscosity and ion-pair lifetime in ionic liquids.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
@@ -44,11 +44,12 @@
 
         <header class="article-header">
           <p class="card-tag">Design rules</p>
-          <h1>Viscosity Across Ionic-Liquid Parameter Space</h1>
+          <h1>Viscosity and Ion-Pair Lifetime Across Ionic-Liquid Parameter Space</h1>
           <p class="article-meta">
-            Presented at the APS March Meeting (Las Vegas, 2023) · builds on
-            <a href="https://doi.org/10.1063/5.0268727" rel="noopener"><em>J. Chem. Phys.</em> 163, 044503 (2025)</a>
+            Also published in <a href="https://doi.org/10.1063/5.0268727" rel="noopener"><em>The Journal of Chemical Physics</em> 163, 044503 (2025)</a>
+            · with A.L. Frischknecht, M.J. Stevens, and I. Nakamura
           </p>
+
         </header>
 
         <!-- Swap each .figure-placeholder for an <img> when figures are ready. -->
@@ -63,34 +64,31 @@
 
         <h2>What we did</h2>
         <p>
-          Using the validated Stockmayer framework, we systematically varied electric
-          charge, dipole moment and dipole mobility, ion size, and chain length, computing
-          viscosity for each point in parameter space with Green-Kubo methods in LAMMPS.
-          The automated Python/Slurm workflow made it practical to cover hundreds of
-          state points on HPC resources.
+          Using the <a href="stockmayer-ean.html">validated Stockmayer framework</a>, we systematically varied electric
+          charge, dipole moment and dipole mobility, and ion size, computing
+          viscosity for each point in parameter space with Green-Kubo methods in LAMMPS. We also relate the changes in viscosity
+	  to a microscopic explanation using the ion-pair lifetimes which provides a measure of how long the oppositely-charged ions
+          in ionic liquid remains paired.
         </p>
 
         <figure class="figure-slot">
-          <div class="figure-placeholder" role="img" aria-label="Placeholder for a map of viscosity across the ionic-liquid parameter space">
-            <span>Figure slot: viscosity map across charge / dipole / size parameter space</span>
-          </div>
-          <figcaption>How viscosity responds to each molecular parameter. <em>(Replace with your figure and caption.)</em></figcaption>
+          <img src="../assets/IP-lifetime.jpg" alt="Schematic of ion-pair formation: an anion approaching the shortest distance from a central cation carrying a dipole">
+
+          <figcaption>Schematic illustrating the definition of ion-pair (IP) formation. An IP is identified when an anion (cyan bead) approaches the shortest distance from the 	  central cation (blue bead with dipole (arrow)) or vice versa.</figcaption>
         </figure>
 
         <h2>What we found</h2>
         <p>
-          Each molecular property leaves a distinct fingerprint on the viscosity, and
-          separating them isolates concrete, molecular-level design rules for engineering
-          low-viscosity ionic liquids. Obtaining this kind of guidance in the lab would be
-          prohibitively expensive, since it would mean synthesizing and measuring candidate
-          compounds one at a time.
+          Viscosity monotonically increases with ionic charge and dipole moment, but non-monotonically changes with ion size. This means that stronger electrostatic
+    	  and dipolar interactions increase viscosity while a competition between packing and electrostatics drives the non-monotonic changes of viscoisty with ion size. Ion-pair          	  lifetimes track viscosity qualitatively, suggesting that longer-lived ion-pairs produce more viscous ionic liquid. This provides molecular-level design rules
+	  for engineering low-viscosity ionic liquids.
+	  
         </p>
 
         <figure class="figure-slot">
-          <div class="figure-placeholder" role="img" aria-label="Placeholder for a second figure, for example scaling trends of viscosity with dipole moment or ion size">
-            <span>Figure slot: viscosity scaling trends with dipole moment or ion size</span>
-          </div>
-          <figcaption><em>(Replace with your figure and caption, or delete this block.)</em></figcaption>
+          <img src="../assets/viscosity-ion-pairs.jpg" alt="Plots of viscosity and ion-pair lifetimes as functions of cation dipole moment, ionic charge, cation diameter, and anion diameter">
+
+          <figcaption>Viscosity (blue circles) and ion-pair lifetimes (green squares) as a function of (a) cation dipole moment, (b) ionic charge, (c) cation diameter, and (d) anion 	  diameter.</figcaption>
         </figure>
 
         <nav class="article-nav" aria-label="More research">

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Polymerized Ionic Liquids — Jes Itliong</title>
-  <meta name="description" content="Viscosity scaling, chain dynamics, and ion pairing in polymerized ionic liquids: effects of cation size and dipole mobility.">
+  <meta name="description" content="Viscosity, chain dynamics, and ion pairing in polymerized ionic liquids: effects of cation size and dipole mobility.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
@@ -44,7 +44,7 @@
 
         <header class="article-header">
           <p class="card-tag">Polymer dynamics</p>
-          <h1>Polymerized Ionic Liquids: Viscosity Scaling, Chain Dynamics, and Ion Pairing</h1>
+          <h1>Polymerized Ionic Liquids: Viscosity, Chain Dynamics, and Ion Pairing</h1>
           <p class="article-meta">
             Manuscript in preparation (2026) · with A.L. Frischknecht, M.J. Stevens, and I. Nakamura
             · presented at the APS Global Physics Summit, Denver, 2026
@@ -57,52 +57,33 @@
         <p>
           When you polymerize an ionic liquid by tethering its cations into chains, you get a
           solid-like, single-ion-conducting material that is attractive for safer batteries
-          and flexible electronics. But polymerization also raises viscosity dramatically and
+          and flexible electronics. These materials are called polymerized ionic liquids. But polymerization also raises viscosity dramatically and
           couples ion motion to polymer dynamics in ways that small-molecule intuition does
-          not predict. How do cation size and dipole mobility control this coupling?
+          not predict. How do cation size and dipole mobility control viscosity, chain reorientation dynamics, 
+	  and ion-pairing in polymerized ionic liquids? How does dipole mobility modulate ion-polymer coupling?
         </p>
 
         <h2>What we did</h2>
         <p>
-          We extended the Stockmayer framework to polymerized ionic liquids (polyILs),
-          running coarse-grained molecular dynamics of dipolar chains with free counterions.
-          Across systematically varied cation sizes and dipole mobilities, we computed
-          viscosity, ion-pair lifetimes, and chain orientational relaxation, connecting
-          monomer-scale chemistry to melt-scale rheology.
+          We extended the Stockmayer fluid model to polymerized ionic liquids (polyILs), using polyEtVIm-TFSI, in which
+	  the cations are rigidly attached to the polymer backbone and the anions are free. We varied the cation sizes and dipole
+	  mobilities (restricted dipoles in which the orientation of cation dipoles are sterically limited by the polymer backbone vs.
+	  semi-restricted dipoles in which the cation dipoles have additional rotational degree of freedom). We computed
+          viscosity, ion-pair lifetimes, and chain orientational relaxation, as well as decompose the viscosity into contributions associated with different relaxation timescales.
         </p>
 
         <figure class="figure-slot">
-          <div class="figure-placeholder" role="img" aria-label="Placeholder for a schematic or snapshot of a polymerized ionic liquid simulation">
-            <span>Figure slot: simulation snapshot of polyIL chains with counterions</span>
-          </div>
-          <figcaption>Coarse-grained polyIL melt. <em>(Replace with your figure and caption.)</em></figcaption>
+          <img src="../assets/polyIL-snapshot.jpg" alt="Simulation snapshot of a coarse-grained polymerized ionic liquid: polyEtVIm-TFSI chains with counterions">
+          <figcaption>Snapshot of coarse-grained polyEtVIm-TFSI system.</figcaption>
         </figure>
 
         <h2>What we found</h2>
         <p>
-          Cation size and dipole mobility each reshape the viscosity scaling of polyILs,
-          and they do so through distinct mechanisms: ion-pair dynamics and chain
-          orientational relaxation respond differently to the two parameters. Together the
-          results point to which monomer-level modifications actually buy you lower melt
-          viscosity without sacrificing the ionic character of the material.
+          The manuscript for this research is currently in preparation for submission. Results cannot be shared at this moment.
         </p>
 
-        <figure class="figure-slot">
-          <div class="figure-placeholder" role="img" aria-label="Placeholder for a plot of viscosity scaling or relaxation dynamics in polymerized ionic liquids">
-            <span>Figure slot: viscosity scaling with chain length, or relaxation-time analysis</span>
-          </div>
-          <figcaption><em>(Replace with your figure and caption.)</em></figcaption>
-        </figure>
-
-        <figure class="figure-slot">
-          <div class="figure-placeholder" role="img" aria-label="Placeholder for a figure on ion pairing dynamics">
-            <span>Figure slot: ion-pair lifetime analysis</span>
-          </div>
-          <figcaption><em>(Optional third figure. Delete this block if you don't need it.)</em></figcaption>
-        </figure>
-
         <nav class="article-nav" aria-label="More research">
-          <a href="parameter-space.html">← Previous: Viscosity across parameter space</a>
+          <a href="parameter-space.html">← Previous: Viscosity and ion-pair lifetime across parameter space</a>
         </nav>
 
       </div>
